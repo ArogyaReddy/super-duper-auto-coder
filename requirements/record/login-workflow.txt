@@ -1,0 +1,24 @@
+const { test, expect } = require('@playwright/test');
+
+test('recorded_login_workflow', async ({ page }) => {
+  // Go to login page
+  await page.goto('https://qa-fit.maxdemo.adp.com/');
+  
+  // Click on login button
+  await page.click('button[data-testid="login-button"]');
+  
+  // Fill username
+  await page.fill('#username', 'testuser@adp.com');
+  
+  // Fill password
+  await page.fill('#password', 'TestPass123');
+  
+  // Click submit
+  await page.click('button[type="submit"]');
+  
+  // Wait for dashboard
+  await page.waitForSelector('[data-testid="dashboard"]');
+  
+  // Verify login success
+  await expect(page.locator('h1')).toContainText('Welcome');
+});

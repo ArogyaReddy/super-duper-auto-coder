@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-07-22T03:09:42.853Z",
+  "platform": "win32",
+  "framework": {
+    "version": "1.0.0",
+    "structure": {
+      "guides": "✅",
+      "guides/prompts": "✅",
+      "SBS_Automation": "✅",
+      "requirements": "✅",
+      "src": "✅",
+      "bin": "✅"
+    },
+    "lastModified": "2025-07-22T03:09:37.758Z"
+  },
+  "git": {
+    "status": "M guides/FRAMEWORK-GUIDELINES.md\n M guides/prompts/AUTO-CODER-MASTER-PROMPT.md\n M guides/prompts/generate-test-artifacts.prompt.md\n M guides/prompts/run-test-artifacts.prompt.md\n M package.json\n M prompt.md\n?? auto-proceed.config.json\n?? guides/NO-PROMPT-AUTOMATION.md\n?? scripts/auto-proceed-wrapper.ps1",
+    "lastCommits": [
+      "06c6993 Add comprehensive VS Code sync protection system - prevents all future sync issues",
+      "1984863 Sync fix: 2025-07-21_23-00",
+      "a1c6490 Add comprehensive context restoration system for cross-platform continuity",
+      "26d3e43 Updated all file references from 'input' to 'requirements' folder",
+      "e37a021 Initial auto-coder framework commit - folder renamed to requirements"
+    ],
+    "branch": "master"
+  },
+  "crossPlatform": {
+    "detected": "Windows",
+    "pathStyle": "Windows (\\)",
+    "shellType": "PowerShell"
+  },
+  "artifacts": {
+    "generated": {
+      "features": 0,
+      "steps": 0,
+      "pages": 0
+    },
+    "requirements": 53,
+    "documentation": 30
+  }
+}

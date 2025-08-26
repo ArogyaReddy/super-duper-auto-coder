@@ -1,0 +1,13 @@
+{
+  "name": "auto-locator-tools",
+  "scripts": {
+    "locators:capture": "node scripts/locator-manager.js capture",
+    "locators:update": "node scripts/locator-manager.js update", 
+    "locators:validate": "node scripts/locator-validator.js",
+    "locators:one-command": "node scripts/one-command-locator.js",
+    "locators:heal": "node scripts/one-command-locator.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.40.0"
+  }
+}

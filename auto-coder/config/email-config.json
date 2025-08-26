@@ -1,0 +1,29 @@
+{
+  "smtp": {
+    "host": "localhost",
+    "port": 587,
+    "secure": false,
+    "auth": {
+      "user": "",
+      "pass": ""
+    }
+  },
+  "from": "arogya.gade@adp.com",
+  "replyTo": "arogya.gade@adp.com",
+  "templates": {
+    "directory": "/Users/gadea/auto/auto/qa_automation/auto-coder/auto-coder/templates/email",
+    "defaultTemplate": "test-results"
+  },
+  "attachments": {
+    "maxSize": 25,
+    "allowedTypes": [
+      ".html",
+      ".json",
+      ".xml",
+      ".txt",
+      ".pdf",
+      ".png",
+      ".jpg"
+    ]
+  }
+}

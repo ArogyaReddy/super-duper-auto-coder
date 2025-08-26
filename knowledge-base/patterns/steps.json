@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "lastUpdated": "2025-08-05",
+    "source": "SBS_Automation Framework Step Patterns",
+    "purpose": "Step definition patterns for auto-coder framework"
+  },
+  "commonSteps": {
+    "navigation": {
+      "patterns": [
+        "When Alex navigates to {string} page",
+        "When Alex clicks on {string}",
+        "When Alex selects {string} from the menu",
+        "When Alex goes to {string} section"
+      ],
+      "implementations": {
+        "navigate_to_page": "await new LeftNav(this.page).navigateTo{PAGE}();",
+        "click_element": "await new {PAGE}Page(this.page).click{ELEMENT}();",
+        "select_menu": "await new LeftNav(this.page).selectMenuItem('{ITEM}');"
+      }
+    },
+    "verification": {
+      "patterns": [
+        "Then Alex verifies {string} is displayed",
+        "Then Alex verifies {string} page title is displayed",
+        "Then Alex verifies {string} button exists and is clickable",
+        "Then Alex sees {string}",
+        "Then Alex can see {string}"
+      ],
+      "implementations": {
+        "verify_displayed": "const isDisplayed = await new {PAGE}Page(this.page).isElementDisplayed('{ELEMENT}'); assert.isTrue(isDisplayed);",
+        "verify_title": "const titleDisplayed = await new {PAGE}Page(this.page).verifyPageTitle('{TITLE}'); assert.isTrue(titleDisplayed);",
+        "verify_button": "const buttonExists = await new {PAGE}Page(this.page).verifyButtonExists('{BUTTON}'); assert.isTrue(buttonExists);"
+      }
+    },
+    "interaction": {
+      "patterns": [
+        "When Alex clicks {string} button",
+        "When Alex enters {string} in {string} field",
+        "When Alex selects {string} from {string} dropdown",
+        "When Alex types {string}",
+        "When Alex uploads {string}"
+      ],
+      "implementations": {
+        "click_button": "await new {PAGE}Page(this.page).clickButton('{BUTTON}');",
+        "enter_text": "await new {PAGE}Page(this.page).enterText('{FIELD}', '{TEXT}');",
+        "select_dropdown": "await new {PAGE}Page(this.page).selectFromDropdown('{DROPDOWN}', '{OPTION}');"
+      }
+    }
+  },
+  "backgroundSteps": {
+    "standard": [
+      "Given Alex is logged into RunMod with a homepage test client",
+      "Then Alex verifies that the Payroll section on the Home Page is displayed"
+    ],
+    "alternative": [
+      "Given Alex has authenticated into the system",
+      "When Alex is on the main dashboard"
+    ]
+  },
+  "parameterization": {
+    "rules": [
+      "Use {string} for text parameters",
+      "Use {int} for number parameters", 
+      "Use {word} for single word parameters",
+      "Prefer parameterized steps over hard-coded ones"
+    ],
+    "examples": {
+      "good": "When Alex navigates to {string} page",
+      "bad": "When Alex navigates to Payroll page"
+    }
+  },
+  "sbsIntegration": {
+    "leftNavigation": {
+      "class": "LeftNav",
+      "methods": [
+        "navigateToBillingAndInvoices()",
+        "navigateToPayroll()",
+        "navigateToReports()",
+        "navigateToSettings()"
+      ]
+    },
+    "basePage": {
+      "methods": [
+        "isVisible(locator)",
+        "isEnabled(locator)",
+        "clickElement(locator)",
+        "scrollToElement(locator)",
+        "navigateToPage(url)"
+      ]
+    }
+  }
+}

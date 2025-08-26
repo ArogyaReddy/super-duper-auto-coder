@@ -1,0 +1,48 @@
+{{!-- Base Test Template --}}
+{{!-- Foundation template for all test types --}}
+
+{{#block imports}}
+// Base imports - extended by child templates
+{{/block}}
+
+{{#block setup}}
+{{!-- Setup code block --}}
+describe('{{featureName}}', () => {
+    {{#block beforeEach}}
+    beforeEach(async () => {
+        // Base setup
+        {{#if theme.styles.verboseLogging}}
+        console.log('Setting up test: {{featureName}}');
+        {{/if}}
+    });
+    {{/block}}
+{{/block}}
+
+{{#block content}}
+    {{!-- Main test content - override in child templates --}}
+    it('should {{action}} {{entity}}', async () => {
+        {{#block testSteps}}
+        // Test implementation
+        {{/block}}
+        
+        {{#block assertions}}
+        // Assertions
+        {{/block}}
+    });
+{{/block}}
+
+{{#block teardown}}
+    {{#block afterEach}}
+    afterEach(async () => {
+        // Base cleanup
+        {{#if theme.styles.verboseLogging}}
+        console.log('Cleaning up test: {{featureName}}');
+        {{/if}}
+    });
+    {{/block}}
+});
+{{/block}}
+
+{{#block helpers}}
+{{!-- Helper functions - extended by child templates --}}
+{{/block}}

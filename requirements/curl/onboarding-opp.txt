@@ -1,0 +1,4 @@
+curl --location 'https://runtoolapiportal-qafit.nj.adp.com/digitalonboarding/v1/onboardingtype/opportunityid/ArogYYaa-0507' \
+--header 'Cookie: BIGipServerp_runtoolapiportal-qafit.nj.adp.com=3530428427.12576.0000' \
+--data ''curl --location 'https://runtoolapiportal-qafit.nj.adp.com/digitalonboarding/v1/onboardingtype/opportunityid/ArogYYaa-0507' \
+--header 'Cookie: BIGipServerp_runtoolapiportal-qafit.nj.adp.com=3530428427.12576.0000' \

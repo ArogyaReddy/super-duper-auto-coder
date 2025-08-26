@@ -1,0 +1,10 @@
+The classic footer should not be displayed based on a new property. This property needs to default to OFF until we are ready to turn it on in conjunction with the new footer. The footer still needs to be displayed when not running NextGen. This is needed to support service users that are not in NG.
+
+https://tfsrepository.es.oneadp.com/tfs/SBS/RUN/_git/CoreRUN?path=%2FRUN%2FOPP%2FCopyToBuildImage%2FWebServer%2FNow%2FWeb%2FV2%2FViews%2FBase%2FSystem%2FIndex.cshtml&version=GBmaster&line=330&lineEnd=331&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents
+
+Acceptance criteria:
+
+The classic footer is not displayed when property is ON and NG is loaded
+The classic footer is displayed when property is OFF
+The classic footer is displayed when it is a service user in classic (NG not loaded)
+The property to turn it off needs to default to OFF for R39 until we plan the rollout. Once we do initial testing with the new footer in NG we can turn this on in R39

@@ -1,0 +1,10 @@
+{
+  "name": "auto-coder-no-ai",
+  "version": "1.0.0",
+  "description": "Auto-coder framework (NO AI) - requirement to feature generator",
+  "main": "generate-feature.js",
+  "scripts": {
+    "generate": "node generate-feature.js"
+  },
+  "dependencies": {}
+}

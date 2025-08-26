@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Test Report Summary</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .chart-placeholder { 
+            width: 100%; 
+            height: 200px; 
+            background: #f0f0f0; 
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{reportType}} Report</h1>
+    <p>Generated: {{timestamp}}</p>
+    
+    {{#if includeCharts}}
+    <div class="chart-placeholder">
+        Chart would be rendered here
+    </div>
+    {{/if}}
+    
+    <div class="report-content">
+        {{{reportContent}}}
+    </div>
+</body>
+</html>
+        

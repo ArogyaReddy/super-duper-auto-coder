@@ -1,0 +1,93 @@
+{
+  "baseUrl": "https://your-runmod-app.com",
+  "credentials": {
+    "username": "your-test-user@example.com",
+    "password": "your-password"
+  },
+  "pageFileName": "bundle-config-page.js",
+  "navigationSteps": [
+    {
+      "type": "wait",
+      "description": "Wait for app to load",
+      "duration": 3000
+    },
+    {
+      "type": "click",
+      "description": "Click Admin menu",
+      "selector": "[data-id='admin']",
+      "context": {
+        "shadow": true,
+        "shadowHost": "sfc-shell-left-nav",
+        "shadowDepth": 1
+      }
+    },
+    {
+      "type": "wait",
+      "description": "Wait for admin menu to expand",
+      "duration": 1000
+    },
+    {
+      "type": "click",
+      "description": "Click Bundle Configuration",
+      "selector": "[data-id='bundle-config']",
+      "context": {
+        "shadow": true,
+        "shadowHost": "sfc-shell-left-nav",
+        "shadowRoot": "admin-section",
+        "shadowDepth": 2
+      }
+    },
+    {
+      "type": "wait",
+      "description": "Wait for bundle config page",
+      "duration": 2000
+    },
+    {
+      "type": "modal",
+      "description": "Check for bundle configuration modal",
+      "modalSelector": ".bundle-config-modal, [role='dialog']",
+      "elementsToCapture": [
+        { "description": "Bundle Configuration Page" },
+        { "description": "CFC Feature Toggle" },
+        { "description": "Save Settings Button" },
+        { "description": "Bundle Selector Dropdown" }
+      ]
+    }
+  ],
+  "elementsToCapture": [
+    { "description": "Bundle Configuration Page" },
+    { "description": "CFC Feature Toggle" },
+    { "description": "Save Settings Button" },
+    { "description": "Bundle Selector Dropdown" },
+    { "description": "Admin menu" },
+    { "description": "Bundle Configuration menu item" }
+  ],
+  "navigationInfo": {
+    "targetPage": "BundleConfiguration",
+    "steps": [
+      {
+        "type": "click",
+        "description": "Navigate to Admin",
+        "selector": "[data-id='admin']",
+        "context": {
+          "shadow": true,
+          "shadowHost": "sfc-shell-left-nav",
+          "shadowDepth": 1
+        },
+        "variableName": "adminMenuElement"
+      },
+      {
+        "type": "click", 
+        "description": "Navigate to Bundle Config",
+        "selector": "[data-id='bundle-config']",
+        "context": {
+          "shadow": true,
+          "shadowHost": "sfc-shell-left-nav",
+          "shadowRoot": "admin-section",
+          "shadowDepth": 2
+        },
+        "variableName": "bundleConfigElement"
+      }
+    ]
+  }
+}

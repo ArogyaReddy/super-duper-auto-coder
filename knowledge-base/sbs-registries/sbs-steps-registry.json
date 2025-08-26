@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "generatedAt": "2025-08-06T05:07:36.733Z",
+    "purpose": "SBS_Automation steps registry to prevent AMBIGUOUS conflicts",
+    "version": "1.0"
+  },
+  "conflictPrevention": {
+    "domainPrefixes": {
+      "billing": "billing_",
+      "payroll": "payroll_",
+      "company": "company_",
+      "people": "people_",
+      "reports": "reports_"
+    },
+    "safePatterns": [
+      "Alex navigates to {domain} {page} page",
+      "Alex verifies the {domain} {element} is displayed",
+      "Alex clicks the {domain} {element} button",
+      "Alex verifies all {domain} page elements are loaded"
+    ]
+  },
+  "existingSteps": [
+    {
+      "pattern": "Alex navigates to Billing Home page",
+      "keyword": "When",
+      "domain": "billing",
+      "file": "steps/billing/billing-home-steps.js",
+      "reusable": true
+    },
+    {
+      "pattern": "Billing Homepage should be displayed",
+      "keyword": "Then",
+      "domain": "billing",
+      "file": "steps/billing/billing-home-steps.js",
+      "reusable": true
+    },
+    {
+      "pattern": "Alex is logged into RunMod with a homepage test client",
+      "keyword": "Given",
+      "domain": "general",
+      "file": "steps/common/common-steps.js",
+      "reusable": true
+    }
+  ],
+  "avoidPatterns": [
+    {
+      "pattern": "Alex navigates to {string} page",
+      "reason": "Too generic - causes 22+ conflicts",
+      "alternative": "Use domain-specific: 'Alex navigates to billing {page} page'"
+    },
+    {
+      "pattern": "Alex clicks {string} button",
+      "reason": "Generic clicking - causes 15+ conflicts",
+      "alternative": "Use context-specific: 'Alex clicks the billing Get Started button'"
+    }
+  ]
+}

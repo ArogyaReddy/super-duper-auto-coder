@@ -1,0 +1,72 @@
+{
+  "baseUrl": "https://your-runmod-app.com",
+  "credentials": {
+    "username": "your-test-user@example.com", 
+    "password": "your-password"
+  },
+  "pageFileName": "cfc-promo-page.js",
+  "navigationSteps": [
+    {
+      "type": "wait",
+      "description": "Wait for app to load",
+      "duration": 3000
+    },
+    {
+      "type": "click",
+      "description": "Click Billings and Invoice menu",
+      "selector": "[data-id='billing']",
+      "context": {
+        "shadow": true,
+        "shadowHost": "sfc-shell-left-nav",
+        "shadowRoot": "li:nth-child(2) > sfc-shell-left-nav-section",
+        "shadowDepth": 2
+      },
+      "variableName": "billingMenu",
+      "elementsToCapture": [
+        { "description": "Billings and Invoice menu" }
+      ]
+    },
+    {
+      "type": "wait", 
+      "description": "Wait for page to load",
+      "duration": 2000
+    },
+    {
+      "type": "modal",
+      "description": "Check for CFC promotional section",
+      "modalSelector": ".cfc-promo-section, [class*='cfc-promo']",
+      "elementsToCapture": [
+        { "description": "CFC promotional header" },
+        { "description": "New badge" },
+        { "description": "CFC promotional sub header" },
+        { "description": "CFC feature summary paragraph" },
+        { "description": "Learn more button" }
+      ]
+    }
+  ],
+  "elementsToCapture": [
+    { "description": "CFC promotional header" },
+    { "description": "New badge" },
+    { "description": "CFC promotional sub header" },
+    { "description": "CFC feature summary paragraph" },
+    { "description": "Learn more button" },
+    { "description": "Billings and Invoice menu" }
+  ],
+  "navigationInfo": {
+    "targetPage": "BillingsAndInvoice",
+    "steps": [
+      {
+        "type": "click",
+        "description": "Navigate to Billings and Invoice",
+        "selector": "[data-id='billing']",
+        "context": {
+          "shadow": true,
+          "shadowHost": "sfc-shell-left-nav", 
+          "shadowRoot": "li:nth-child(2) > sfc-shell-left-nav-section",
+          "shadowDepth": 2
+        },
+        "variableName": "billingMenuElement"
+      }
+    ]
+  }
+}

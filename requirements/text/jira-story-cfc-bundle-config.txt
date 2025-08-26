@@ -1,0 +1,22 @@
+As a RUN client 
+I want to have the ability to access CashFlow Central (CFC)
+So that i can benefit from the services offered by them and streamline my financial operations
+
+Tech: Create a new component for CFC that will be available for the below bundles. The component will default to be off and will be available through the features and overviews page and can be turned on and off via that page. Use a RUN property to drive making this available.
+
+https://confluence.es.ad.adp.com/display/%7Egoutamn/Adding+New+Component+in+Existing+Bundle
+
+Acceptance Criteria
+
+CFC feature must be available for the following RUN Retail bundles
+ADP Essential Payroll
+ADP Enhanced Payroll
+ADP Complete Payroll and HR Plus
+ADP HR Pro
+To confirm of Digital Essential bundle should be included too?? Yes unless confirmed by Shuba to not include it — Digital essential (2X and 2R) out of scope. – Shubha to align with stakeholders
+Feature must be automatically enabled for all 
+new clients
+existing clients (do we need a different user story for this use case? – scope: have to be activated from this page for existing clients. Separate Ticket will be added to have scripts to automatically enable it for existing clients. )
+Feature must be presented on the feature overview page
+Feature must be presented in view only mode for all client users
+Feature must be presented in view and edit mode for all service users

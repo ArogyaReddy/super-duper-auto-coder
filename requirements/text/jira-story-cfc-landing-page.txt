@@ -1,0 +1,29 @@
+CFC - Landing Page Tile First Time User
+
+As a RUN client 
+I want to have the ability to access CashFlow Central (CFC)
+So that i can benefit from the services offered by them and streamline my financial operations
+
+Figma: 
+
+https://www.figma.com/proto/NDOwlBOyCIqMaQSkKNd2fk/CashFlow-Central--CFC--Integration?node-id=277-20997&p=f&t=FVaFk3H64qVpSqfk-1&scaling=min-zoom&content-scaling=fixed&page-id=286%3A17730&starting-point-node-id=277%3A20997
+
+Acceptance Criteria:
+
+Scope: Mock the promo box to. be replaced by final product by IPM team. UI only no actionable CTAs. 
+
+First time user should have the ability to initiate CFC activation from the Billings & Invoices Landing page
+Present CFC promo on the Billings and Invoices landing page
+CFC promo must include the following as per Figma 
+Get started
+Learn more
+UI copy
+UX will be available to all CFC user roles that were provided
+Owner
+Payroll admin/HR Admin 
+HR Admin
+Payroll Admin (for PO reference – AC roles are included in the payroll admin role)
+Service role
+By default CFC will be available for web context only.
+Test as an accountant connect user
+If MCA parent is true – hide the CFC

@@ -1,0 +1,5 @@
+Feature: User Login Process
+AC1: User can navigate to login page
+AC2: User can enter valid username and password
+AC3: User can click login button and be redirected to dashboard
+AC4: System validates credentials and displays success message

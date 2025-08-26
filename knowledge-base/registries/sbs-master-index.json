@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "generated_date": "2025-08-06",
+    "purpose": "Master index of all SBS_Automation registries",
+    "version": "1.0"
+  },
+  "registries": {
+    "step_definitions": "sbs-step-definitions-registry.json",
+    "page_objects": "sbs-page-objects-registry.json",
+    "features": "sbs-features-registry.json",
+    "actions": "sbs-actions-registry.json",
+    "locators": "sbs-locators-registry.json"
+  },
+  "usage_guide": {
+    "before_generation": [
+      "1. Load step definitions registry to check for conflicts",
+      "2. Load page objects registry to reuse existing methods",
+      "3. Load features registry to follow established patterns",
+      "4. Load actions registry to use consistent verbs",
+      "5. Load locators registry to follow selector patterns"
+    ],
+    "conflict_prevention": [
+      "Search step definitions before creating new steps",
+      "Use domain-specific prefixes to avoid ambiguity",
+      "Reuse existing page object methods where possible",
+      "Follow established feature file patterns"
+    ]
+  }
+}

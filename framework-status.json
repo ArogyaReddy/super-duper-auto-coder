@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-07-22T15:58:47.906Z",
+  "platform": "win32",
+  "framework": {
+    "version": "1.0.0",
+    "structure": {
+      "guides": "✅",
+      "guides/prompts": "✅",
+      "SBS_Automation": "✅",
+      "requirements": "✅",
+      "src": "✅",
+      "bin": "✅"
+    },
+    "lastModified": "2025-07-22T14:53:13.376Z"
+  },
+  "git": {
+    "status": "D CLEANUP-COMPLETE.md\n D CROSS-PLATFORM-GUIDE.md\n D NO-PROMPT-SOLUTION-COMPLETE.md\n D SBS_Automation/summary/jira-story-employee-employee-summary.json\n D SBS_Automation/summary/jira-story-general-item-summary.json\n D SBS_Automation/summary/jira-story-payroll-user-summary.json\n M SBS_Automation/summary/users-gadea-summary.json\n D SYNC-ISSUE-RESOLVED.md\n D TESTING-COMMANDS.md\n M bin/auto-coder.js\n D cli.js\n D framework-status.json\n M guides/CLEANUP-COMPLETE.md\n M guides/prompts/AUTO-CODER-MASTER-PROMPT.md\n M guides/prompts/generate-test-artifacts.prompt.md\n M guides/prompts/run-test-artifacts.prompt.md\n M package.json\n M prompt.md\n M src/interactive-cli.js\n D test-cross-platform.js\n D test-integration.js\n D test-priority1-artifacts.js\n D validate-final-quality.js\n D validate-priority1-quality.js\n?? SBS_Automation/data/\n?? SBS_Automation/index.js\n?? SBS_Automation/mobile.config.json\n?? SBS_Automation/summary/cfc-api-test-summary.json\n?? SBS_Automation/summary/jira-story-rs-end-point-summary.json\n?? SBS_Automation/summary/login-feature-summary.json\n?? SBS_Automation/summary/onboarding-opp-summary.json\n?? SBS_Automation/summary/user-registration-summary.json\n?? SBS_Automation/support/\n?? SBS_Automation/web.config.json\n?? config/framework-status.json\n?? generated/features/cfc-api-test.feature\n?? generated/features/jira-story-rs-end-point.feature\n?? generated/features/login-feature.feature\n?? generated/features/onboarding-opp.feature\n?? generated/features/user-registration.feature\n?? generated/pages/cfc-api-test-page.js\n?? generated/pages/jira-story-rs-end-point-page.js\n?? generated/pages/login-feature-page.js\n?? generated/pages/onboarding-opp-page.js\n?? generated/pages/user-registration-page.js\n?? generated/steps/cfc-api-test-steps.js\n?? generated/steps/jira-story-rs-end-point-steps.js\n?? generated/steps/login-feature-steps.js\n?? generated/steps/onboarding-opp-steps.js\n?? generated/steps/user-registration-steps.js\n?? guides/CROSS-PLATFORM-GUIDE.md\n?? guides/FRAMEWORK-ORGANIZATION-RULES.md\n?? guides/NO-PROMPT-SOLUTION-COMPLETE.md\n?? guides/SBS-AUTOMATION-INTEGRATION-COMPLETE.md\n?? guides/SBS-INTEGRATION-MISSION-COMPLETE.md\n?? guides/SYNC-ISSUE-RESOLVED.md\n?? guides/TESTING-COMMANDS.md\n?? guides/prompt.md\n?? input/\n?? knowledge-base/docs/SBS-Config_Matching.md\n?? requirements/curl/user-management-api.txt\n?? requirements/text/shopping-cart.md\n?? requirements/text/user-registration.txt\n?? scripts/cleanup-generated-artifacts.js\n?? scripts/cli.js\n?? scripts/deploy-to-sbs.js\n?? scripts/environment-manager.js\n?? scripts/organize-framework-structure.js\n?? scripts/test-cross-platform.js\n?? scripts/test-integration.js\n?? scripts/test-priority1-artifacts.js\n?? scripts/validate-final-quality.js\n?? scripts/validate-framework-structure.js\n?? scripts/validate-priority1-quality.js\n?? src/adapters/api-curl-adapter.js\n?? src/adapters/input-type-manager.js\n?? src/adapters/playwright-codegen-adapter.js\n?? temp/\n?? test-output/",
+    "lastCommits": [
+      "e89df10 ADD CLI ISSUES RESOLUTION SUMMARY",
+      "42eb527 FIX ALL 3 CRITICAL CLI ISSUES - Generation Working Perfectly",
+      "347a811 ADD 4 CRITICAL AREAS COMPLETION SUMMARY",
+      "aec20f5 IMPLEMENT 4 CRITICAL AREAS - Complete framework enhancement",
+      "316a08a no-promt-solution"
+    ],
+    "branch": "master"
+  },
+  "crossPlatform": {
+    "detected": "Windows",
+    "pathStyle": "Windows (\\)",
+    "shellType": "PowerShell"
+  },
+  "artifacts": {
+    "generated": {
+      "features": 3,
+      "steps": 3,
+      "pages": 3
+    },
+    "requirements": 57,
+    "documentation": 45
+  }
+}

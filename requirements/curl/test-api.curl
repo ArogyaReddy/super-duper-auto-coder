@@ -1,0 +1,13 @@
+# Portfolio Management API
+curl -X POST "https://api.sbs.com/portfolios" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {token}" \
+  -d '{
+    "clientId": "12345",
+    "portfolioName": "Conservative Growth",
+    "riskLevel": "moderate",
+    "initialInvestment": 50000
+  }'
+
+curl -X GET "https://api.sbs.com/portfolios/{portfolioId}" \
+  -H "Authorization: Bearer {token}"

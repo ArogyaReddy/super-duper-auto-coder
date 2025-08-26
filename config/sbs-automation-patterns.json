@@ -1,0 +1,106 @@
+{
+  "_CRITICAL_PRODUCTION_RULES": {
+    "_NOTE": "MANDATORY ENFORCEMENT FOR ALL GENERATED ARTIFACTS",
+    "RULE_1": "LOCATOR STANDARDS: Prefer By.css() with single quotes; avoid By.xpath() unless necessary",
+    "RULE_2": "PARAMETERIZATION: Use parameterized locators for dynamic elements referenced in feature files",
+    "RULE_3": "CLEAN METHODS: No unused parameters in page methods",
+    "RULE_4": "EXISTING METHODS ONLY: Only use methods that exist in main SBS_Automation BasePage (no waitForPageLoad())",
+    "RULE_5": "PROPER CONSTRUCTORS: No locators in constructor, always call super(page)"
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-07-24",
+    "source": "SBS_Automation Framework Patterns",
+    "purpose": "Static abstraction layer for auto-coder framework"
+  },
+  "basePage": {
+    "classPattern": {
+      "constructor": "constructor(page) { super(page); this.page = page; }",
+      "extends": "BasePage",
+      "imports": [
+        "const BasePage = require('./common/base-page');",
+        "const By = require('../support/By.js');"
+      ]
+    },
+    "commonMethods": {
+      "waitForElement": "async waitForElement(locator, options = {}) { await this.page.waitForSelector(locator, options); }",
+      "click": "async click(locator) { await this.page.click(locator); }",
+      "fill": "async fill(locator, text) { await this.page.fill(locator, text); }",
+      "getText": "async getText(locator) { return await this.page.textContent(locator); }",
+      "isVisible": "async isVisible(locator) { return await this.page.isVisible(locator); }",
+      "waitForVisible": "async waitForVisible(locator, timeout = 10000) { await this.page.waitForSelector(locator, { state: 'visible', timeout }); }",
+      "getAttribute": "async getAttribute(locator, attribute) { return await this.page.getAttribute(locator, attribute); }",
+      "isElementVisible": "async isElementVisible(locator) { return await this.page.isVisible(locator); }",
+      "getElement": "async getElement(locator) { return await this.page.locator(locator); }",
+      "getAllElements": "async getAllElements(locator) { return await this.page.locator(locator).all(); }",
+      "waitForElementText": "async waitForElementText(locator, text, timeout = 10000) { await this.page.waitForFunction((sel, txt) => document.querySelector(sel)?.textContent?.includes(txt), [locator, text], { timeout }); }"
+    }
+  },
+  "stepDefinitions": {
+    "imports": [
+      "const { Given, When, Then } = require('@cucumber/cucumber');",
+      "const { assert } = require('chai');"
+    ],
+    "pageInstantiation": "pageObject = pageObject || new PageClass(this.page);",
+    "assertionPatterns": {
+      "assertTrue": "assert.isTrue(result, 'Error message');",
+      "assertEqual": "assert.equal(actual, expected, 'Error message');",
+      "assertContains": "assert.include(text, substring, 'Error message');"
+    }
+  },
+  "locatorPatterns": {
+    "byClass": "By.css('[data-test-id=\"element-id\"]')",
+    "byXpath": "By.xpath('//element[@attribute=\"value\"]')",
+    "shadowDomXpath": "By.xpath('//sdf-component[@attribute=\"value\"]')",
+    "dynamicXpath": "(paramValue) => By.xpath(`//element[text()=\"${paramValue}\"]`)",
+    "constants": "const ELEMENT_NAME = By.css('[data-test-id=\"element-id\"]');"
+  },
+  "featurePatterns": {
+    "tags": [
+      "@Team:AutoCoder",
+      "@Category:Generated", 
+      "@Generated",
+      "@Priority:High",
+      "@Component:ComponentName"
+    ],
+    "backgroundStructure": [
+      "Given Alex is logged into RunMod with a homepage test client",
+      "Then Alex verifies that the Payroll section on the Home Page is displayed"
+    ],
+    "scenarioStructure": {
+      "title": "@Component:Name @Scenario:BusinessContext",
+      "description": "As a [role] I want [capability] So that [business value]"
+    }
+  },
+  "environmentConfig": {
+    "baseUrls": {
+      "local": "http://localhost:3000",
+      "staging": "https://staging.example.com",
+      "fit": "https://fit.example.com",
+      "iat": "https://iat.example.com"
+    },
+    "testData": {
+      "defaultUser": "testuser",
+      "defaultPassword": "password",
+      "clientId": "test-client-123"
+    },
+    "browserConfig": {
+      "headless": false,
+      "timeout": 30000,
+      "viewport": { "width": 1920, "height": 1080 }
+    }
+  },
+  "commonElements": {
+    "login": {
+      "loginButton": "[data-test-id=\"login-button\"]",
+      "usernameField": "#username",
+      "passwordField": "#password",
+      "submitButton": "button[type=\"submit\"]"
+    },
+    "navigation": {
+      "homeButton": "[data-test-id=\"home-button\"]",
+      "menuToggle": "[data-test-id=\"menu-toggle\"]",
+      "logoutButton": "[data-test-id=\"logout-button\"]"
+    }
+  }
+}

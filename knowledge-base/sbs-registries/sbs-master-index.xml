@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<masterIndex>
+  <metadata>
+    <generatedAt>2025-08-06T05:07:36.765Z</generatedAt>
+  </metadata>
+  <registries>
+    <features>sbs-features-registry.json</features>
+    <steps>sbs-steps-registry.json</steps>
+    <pages>sbs-pages-registry.json</pages>
+    <actions>sbs-actions-registry.json</actions>
+    <locators>sbs-locators-registry.json</locators>
+  </registries>
+</masterIndex>

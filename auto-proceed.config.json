@@ -1,0 +1,80 @@
+{
+  "autoProceed": {
+    "enabled": true,
+    "mode": "aggressive",
+    "description": "Eliminates all prompts for seamless workflow",
+    "confirmations": {
+      "fileOverwrite": false,
+      "directoryCreation": false,
+      "gitCommits": false,
+      "packageInstalls": false,
+      "scriptExecution": false,
+      "testExecution": false,
+      "artifactGeneration": false,
+      "backupCreation": false,
+      "reportGeneration": false,
+      "dependencyUpdates": false
+    },
+    "defaults": {
+      "overwriteFiles": true,
+      "createDirectories": true,
+      "commitChanges": true,
+      "installDependencies": true,
+      "executeScripts": true,
+      "runTests": true,
+      "generateArtifacts": true,
+      "createBackups": true,
+      "generateReports": true,
+      "updateDependencies": true,
+      "openResults": false,
+      "clearCache": true
+    },
+    "timeouts": {
+      "scriptExecution": 300,
+      "testExecution": 600,
+      "artifactGeneration": 180,
+      "gitOperations": 60,
+      "packageInstalls": 120,
+      "reportGeneration": 90
+    },
+    "retries": {
+      "failedCommands": 3,
+      "networkOperations": 5,
+      "fileOperations": 2
+    },
+    "logging": {
+      "enabled": true,
+      "level": "info",
+      "file": "logs/auto-proceed.log",
+      "console": false
+    }
+  },
+  "environment": {
+    "variables": {
+      "AUTO_PROCEED": "true",
+      "CI": "true",
+      "FORCE_COLOR": "0",
+      "NO_INTERACTION": "true",
+      "BATCH_MODE": "true"
+    }
+  },
+  "commands": {
+    "powershell": {
+      "defaultFlags": ["-Force", "-Confirm:$false", "-ErrorAction", "Continue"],
+      "executionPolicy": "Bypass"
+    },
+    "npm": {
+      "defaultFlags": ["--yes", "--silent", "--no-audit", "--no-progress"],
+      "forceInstall": true
+    },
+    "git": {
+      "defaultFlags": ["--no-verify", "--quiet"],
+      "autoCommit": true,
+      "autoCommitMessage": "Auto-commit: {timestamp}"
+    },
+    "cucumber": {
+      "defaultFlags": ["--no-colors", "--quiet"],
+      "autoReports": true
+    }
+  }
+}

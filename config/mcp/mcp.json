@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "auto-coder": {
+      "command": "node",
+      "args": ["src/mcp-server/auto-coder-mcp-server.js"],
+      "cwd": "/Users/gadea/auto/auto/qa_automation/auto-coder",
+      "env": {
+        "NODE_ENV": "development",
+        "SBS_AUTOMATION_PATH": "/Users/gadea/auto/auto/qa_automation/SBS_Automation"
+      }
+    }
+  }
+}

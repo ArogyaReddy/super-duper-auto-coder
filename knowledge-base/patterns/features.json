@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "lastUpdated": "2025-08-05",
+    "source": "SBS_Automation Framework Feature Patterns",
+    "purpose": "Feature file patterns for auto-coder framework"
+  },
+  "featureTemplates": {
+    "standard": {
+      "header": "Feature: {FEATURE_NAME}\n  As a {USER_ROLE}\n  I want to {ACTION}\n  So that {BENEFIT}",
+      "background": "Background:\n    Given Alex is logged into RunMod with a homepage test client\n    Then Alex verifies that the Payroll section on the Home Page is displayed",
+      "scenario": "Scenario: {SCENARIO_NAME}\n    When {ACTION_STEP}\n    Then {VERIFICATION_STEP}"
+    }
+  },
+  "stepPatterns": {
+    "navigation": [
+      "When Alex navigates to {string} page",
+      "When Alex clicks on {string}",
+      "When Alex selects {string} from the menu"
+    ],
+    "verification": [
+      "Then Alex verifies {string} is displayed",
+      "Then Alex verifies {string} page title is displayed",
+      "Then Alex verifies {string} button exists and is clickable"
+    ],
+    "interaction": [
+      "When Alex clicks {string} button",
+      "When Alex enters {string} in {string} field",
+      "When Alex selects {string} from {string} dropdown"
+    ]
+  },
+  "locatorPatterns": {
+    "button": "//button[contains(text(), '{TEXT}')] | //sdf-button[contains(text(), '{TEXT}')] | //*[@data-test-id='{ID}']",
+    "link": "//a[contains(text(), '{TEXT}')] | //sdf-link[contains(text(), '{TEXT}')] | //*[@data-test-id='{ID}']",
+    "title": "//h1[contains(text(), '{TEXT}')] | //*[@data-test-id='page-title'][contains(text(), '{TEXT}')] | //*[contains(@class, 'page-header')][contains(text(), '{TEXT}')]",
+    "input": "//input[@placeholder='{PLACEHOLDER}'] | //input[@name='{NAME}'] | //*[@data-test-id='{ID}']"
+  },
+  "codePatterns": {
+    "pageClass": {
+      "template": "class {PAGE_NAME}Page extends BasePage {\n  constructor(page) {\n    super(page);\n    this.page = page;\n  }\n}",
+      "imports": [
+        "const By = require('../../support/By.js');",
+        "const BasePage = require('../common/base-page');"
+      ]
+    },
+    "stepDefinition": {
+      "template": "{STEP_TYPE}('{STEP_PATTERN}', { timeout: 240 * 1000 }, async function ({PARAMS}) {\n  // Implementation\n});",
+      "imports": [
+        "const { assert } = require('chai');",
+        "const { Given, When, Then } = require('@cucumber/cucumber');"
+      ]
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "generatedAt": "2025-08-06T05:07:36.765Z",
+    "purpose": "Master index for all SBS_Automation registries",
+    "version": "1.0"
+  },
+  "registries": {
+    "features": "sbs-features-registry.json",
+    "steps": "sbs-steps-registry.json",
+    "pages": "sbs-pages-registry.json",
+    "actions": "sbs-actions-registry.json",
+    "locators": "sbs-locators-registry.json"
+  },
+  "conflictPreventionConfig": {
+    "enabled": true,
+    "strictMode": true,
+    "domainSeparation": true,
+    "reuseExistingSteps": true
+  },
+  "autoCoderIntegration": {
+    "preGenerationValidation": true,
+    "conflictChecking": true,
+    "registryLookup": true,
+    "domainPrefixEnforcement": true
+  }
+}

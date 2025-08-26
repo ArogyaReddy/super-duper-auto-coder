@@ -1,0 +1,354 @@
+{
+  "environments": {
+    "fit": {
+      "name": "QA FIT",
+      "baseUrl": "https://online-fit.nj.adp.com/signin/v1/?APPID=RUN&productId=7ab877eb-7a34-f136-e053-1a4f10332043",
+      "associateUrl": "https://runpayroll-qafit.es.ad.adp.com/@836D254C-789B-41B8-8052-D48A639E95D8/admin/login.aspx",
+      "auth": {
+        "enabled": true,
+        "stepUpEnabled": true,
+        "twoFactorEnabled": false,
+        "credentials": {
+          "user": {
+            "username": "",
+            "password": ""
+          },
+          "associate": {
+            "username": "cautomation3@adp",
+            "password": "Test2488"
+          }
+        }
+      },
+      "features": {
+        "supportsATP": true,
+        "supportsStepUp": true,
+        "supportsProductionData": false
+      }
+    },
+    "iat": {
+      "name": "Integration Testing (IAT)",
+      "baseUrl": "https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c",
+      "associateUrl": "https://runpayroll-iat.es.ad.adp.com/@836D254C-789B-41B8-8052-D48A639E95D8/admin/login.aspx",
+      "auth": {
+        "enabled": true,
+        "stepUpEnabled": true,
+        "twoFactorEnabled": true,
+        "credentials": {
+          "user": {
+            "username": "",
+            "password": ""
+          },
+          "associate": {
+            "username": "cautomation3@adp",
+            "password": "Test2461"
+          }
+        }
+      },
+      "features": {
+        "supportsATP": true,
+        "supportsStepUp": true,
+        "supportsProductionData": false
+      }
+    },
+    "prod": {
+      "name": "Production",
+      "baseUrl": "https://runpayroll.adp.com",
+      "associateUrl": "https://runpayroll.es.ad.adp.com/@836D254C-789B-41B8-8052-D48A639E95D8/admin/login.aspx?prereqdetect=true",
+      "auth": {
+        "enabled": true,
+        "stepUpEnabled": true,
+        "twoFactorEnabled": true,
+        "credentials": {
+          "user": {
+            "username": "",
+            "password": ""
+          },
+          "associate": {
+            "username": "",
+            "password": ""
+          }
+        }
+      },
+      "features": {
+        "supportsATP": false,
+        "supportsStepUp": true,
+        "supportsProductionData": true
+      }
+    },
+    "local": {
+      "name": "Local Development",
+      "baseUrl": "http://localhost:3000",
+      "associateUrl": "http://localhost:3000/admin",
+      "auth": {
+        "enabled": false,
+        "stepUpEnabled": false,
+        "twoFactorEnabled": false,
+        "credentials": {
+          "user": {
+            "username": "test@local.dev",
+            "password": "localpass"
+          },
+          "associate": {
+            "username": "admin@local.dev",
+            "password": "adminpass"
+          }
+        }
+      },
+      "features": {
+        "supportsATP": false,
+        "supportsStepUp": false,
+        "supportsProductionData": false
+      }
+    }
+  },
+  "featureFlags": {
+    "login": {
+      "SKIP_LOGIN": {
+        "description": "Skip login process entirely",
+        "default": false,
+        "environments": {
+          "local": true,
+          "fit": false,
+          "iat": false,
+          "prod": false
+        }
+      },
+      "ENABLE_STEP_UP_AUTH": {
+        "description": "Enable step-up authentication",
+        "default": true,
+        "environments": {
+          "local": false,
+          "fit": true,
+          "iat": true,
+          "prod": true
+        }
+      },
+      "ENABLE_TWO_FACTOR_AUTH": {
+        "description": "Enable two-factor authentication",
+        "default": true,
+        "environments": {
+          "local": false,
+          "fit": false,
+          "iat": true,
+          "prod": true
+        }
+      },
+      "USE_SSO_LOGIN": {
+        "description": "Use Single Sign-On for authentication",
+        "default": false,
+        "environments": {
+          "local": false,
+          "fit": false,
+          "iat": false,
+          "prod": true
+        }
+      }
+    },
+    "testing": {
+      "API_ONLY_MODE": {
+        "description": "Run only API tests, skip UI tests",
+        "default": false,
+        "environments": {
+          "local": false,
+          "fit": false,
+          "iat": false,
+          "prod": false
+        }
+      },
+      "UI_ONLY_MODE": {
+        "description": "Run only UI tests, skip API tests",
+        "default": false,
+        "environments": {
+          "local": false,
+          "fit": false,
+          "iat": false,
+          "prod": false
+        }
+      },
+      "SKIP_UI_LOGIN_FOR_API": {
+        "description": "Skip UI login when running API tests",
+        "default": true,
+        "environments": {
+          "local": true,
+          "fit": true,
+          "iat": true,
+          "prod": true
+        }
+      },
+      "LOCAL_DEVELOPMENT": {
+        "description": "Enable local development mode",
+        "default": false,
+        "environments": {
+          "local": true,
+          "fit": false,
+          "iat": false,
+          "prod": false
+        }
+      },
+      "BYPASS_AUTH_FOR_LOCAL": {
+        "description": "Bypass authentication in local development",
+        "default": false,
+        "environments": {
+          "local": true,
+          "fit": false,
+          "iat": false,
+          "prod": false
+        }
+      }
+    },
+    "browser": {
+      "HEADLESS_MODE": {
+        "description": "Run browser in headless mode",
+        "default": false,
+        "environments": {
+          "local": false,
+          "fit": true,
+          "iat": true,
+          "prod": true
+        }
+      },
+      "ENABLE_SCREENSHOTS": {
+        "description": "Take screenshots during test execution",
+        "default": true,
+        "environments": {
+          "local": true,
+          "fit": true,
+          "iat": true,
+          "prod": true
+        }
+      },
+      "ENABLE_VIDEO_RECORDING": {
+        "description": "Record video of test execution",
+        "default": false,
+        "environments": {
+          "local": false,
+          "fit": false,
+          "iat": true,
+          "prod": true
+        }
+      }
+    },
+    "debug": {
+      "DEBUG_MODE": {
+        "description": "Enable debug mode with additional logging",
+        "default": false,
+        "environments": {
+          "local": true,
+          "fit": false,
+          "iat": false,
+          "prod": false
+        }
+      },
+      "VERBOSE_LOGGING": {
+        "description": "Enable verbose logging output",
+        "default": false,
+        "environments": {
+          "local": true,
+          "fit": false,
+          "iat": false,
+          "prod": false
+        }
+      },
+      "ENABLE_TRACE": {
+        "description": "Enable Playwright trace recording",
+        "default": false,
+        "environments": {
+          "local": false,
+          "fit": false,
+          "iat": false,
+          "prod": false
+        }
+      }
+    }
+  },
+  "testConfiguration": {
+    "defaultEnvironment": "fit",
+    "defaultBrowser": "chrome",
+    "defaultTimeout": 180000,
+    "retryCount": 2,
+    "parallelWorkers": 1,
+    "scenarios": {
+      "local_development": {
+        "featureFlags": {
+          "LOCAL_DEVELOPMENT": true,
+          "BYPASS_AUTH_FOR_LOCAL": true,
+          "SKIP_LOGIN": true,
+          "HEADLESS_MODE": false,
+          "DEBUG_MODE": true,
+          "VERBOSE_LOGGING": true
+        }
+      },
+      "api_testing": {
+        "featureFlags": {
+          "API_ONLY_MODE": true,
+          "SKIP_UI_LOGIN_FOR_API": true,
+          "HEADLESS_MODE": true,
+          "ENABLE_SCREENSHOTS": false
+        }
+      },
+      "ui_testing": {
+        "featureFlags": {
+          "UI_ONLY_MODE": true,
+          "API_ONLY_MODE": false,
+          "ENABLE_SCREENSHOTS": true
+        }
+      },
+      "ci_pipeline": {
+        "featureFlags": {
+          "HEADLESS_MODE": true,
+          "ENABLE_SCREENSHOTS": true,
+          "ENABLE_VIDEO_RECORDING": false,
+          "VERBOSE_LOGGING": false
+        }
+      },
+      "regression_testing": {
+        "featureFlags": {
+          "USE_GOLDEN_DATA": true,
+          "ENABLE_SCREENSHOTS": true,
+          "ENABLE_VIDEO_RECORDING": true,
+          "VERBOSE_LOGGING": true
+        }
+      }
+    }
+  },
+  "selectors": {
+    "login": {
+      "username": [
+        "#login-form_username",
+        "#username",
+        "input[name='username']",
+        "input[name='email']",
+        "input[type='email']",
+        "[data-testid='username']",
+        ".username-input"
+      ],
+      "password": [
+        "#login-form_password",
+        "#password",
+        "input[name='password']",
+        "input[type='password']",
+        "[data-testid='password']",
+        ".password-input"
+      ],
+      "verifyButton": "#verifUseridBtn, #btnNext, button[type='submit'], .next-btn",
+      "signInButton": "#signBtn, #btnNext, button[type='submit'], .signin-btn, .login-btn",
+      "remindLaterButton": "//*[text() = 'Remind me later']",
+      "stepUpDialog": "[data-testid='stepup-dialog'], .stepup-modal",
+      "textNotification": "[data-testid='text-notification'], button:has-text('Text')",
+      "emailNotification": "[data-testid='email-notification'], button:has-text('Email')"
+    },
+    "postLogin": {
+      "successIndicators": [
+        "[data-testid='home-dashboard']",
+        "[data-testid='user-menu']",
+        ".home-page",
+        ".dashboard",
+        "h1:has-text('Dashboard')",
+        "h1:has-text('Home')",
+        "[aria-label='User menu']",
+        ".payroll-carousel",
+        ".max-dashboard"
+      ]
+    }
+  }
+}

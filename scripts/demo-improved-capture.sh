@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# 🚀 IMPROVED INSTANT PAGE CAPTURE DEMO
+# 
+# Now with user-controlled timing!
+
+echo "🚀 IMPROVED INSTANT PAGE CAPTURE"
+echo "================================="
+echo ""
+echo "🎯 TAKE YOUR TIME! No more rushing to navigate!"
+echo ""
+echo "USAGE OPTIONS:"
+echo ""
+echo "1. INTERACTIVE MODE (RECOMMENDED):"
+echo "   node scripts/instant-capture.js \"Page Name\""
+echo "   → Browser opens"
+echo "   → Take as long as you need to navigate"
+echo "   → Press ENTER when ready to scan"
+echo ""
+echo "2. TIMEOUT MODE (for quick testing):"
+echo "   node scripts/instant-capture.js \"Page Name\" --timeout 30"
+echo "   → Auto-scans after 30 seconds"
+echo ""
+echo "EXAMPLES:"
+echo "   node scripts/instant-capture.js \"Billing Page\""
+echo "   node scripts/instant-capture.js \"Admin Dashboard\" --timeout 20"
+echo "   node scripts/instant-capture.js \"User Profile\" --interactive"
+echo ""
+echo "✨ WORKFLOW:"
+echo "   1. Run command"
+echo "   2. Browser opens"
+echo "   3. Navigate to your app (login, go to page)"
+echo "   4. Press ENTER when ready (or wait for timeout)"
+echo "   5. Perfect SBS page file generated!"
+echo ""
+echo "🎉 NO MORE TIME PRESSURE!"
+echo "🎉 NAVIGATE AT YOUR OWN PACE!"
+echo "🎉 PERFECT ELEMENT CAPTURE!"

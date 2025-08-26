@@ -1,0 +1,9 @@
+AC1: Prime use case.
+Given I have an W2 employee created from an extraction
+When I see them in the EE app
+Then I should be able to switch them to be a contractor 
+
+AC2:  Secondary use case.
+Given I have an contractor created from an extraction
+When I see them in the EE app
+Then I should be able to switch them to be a W2 employee 

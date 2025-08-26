@@ -1,0 +1,33 @@
+{
+  "registryIntegration": {
+    "enabled": true,
+    "registryPath": "./knowledge-base/sbs-master-registries",
+    "validationMode": "strict",
+    "conflictResolution": "suggest_existing"
+  },
+  "stepGeneration": {
+    "requireDomainPrefix": true,
+    "maxGenericParameters": 1,
+    "reuseThreshold": 0.8,
+    "conflictTolerance": "zero"
+  },
+  "domainPrefixes": {
+    "billing": "billing_",
+    "payroll": "payroll_",
+    "company": "company_",
+    "people": "people_",
+    "reports": "reports_",
+    "wholesale": "wholesale_"
+  },
+  "validationRules": [
+    "no_duplicate_patterns",
+    "domain_specific_naming",
+    "business_language_compliance",
+    "existing_step_reuse"
+  ],
+  "outputFormat": {
+    "includeMetadata": true,
+    "generateDocumentation": true,
+    "createRegistryUpdates": true
+  }
+}

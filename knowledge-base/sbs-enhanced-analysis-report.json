@@ -1,0 +1,136 @@
+{
+  "title": "Enhanced SBS_Automation Registry Analysis Report",
+  "generatedAt": "2025-08-06T04:55:48.317Z",
+  "executiveSummary": {
+    "filesScanned": 5359,
+    "stepsFound": 12874,
+    "pagesFound": 701,
+    "featuresFound": 1942,
+    "conflictsDetected": 447,
+    "riskLevel": "HIGH"
+  },
+  "conflictAnalysis": {
+    "total": 472,
+    "bySeverity": {
+      "HIGH": 408,
+      "MEDIUM": 51,
+      "LOW": 13
+    },
+    "topConflicts": [
+      {
+        "type": "step_conflict",
+        "pattern": "Alex should see menu screen",
+        "keyword": "Then",
+        "files": [
+          "mobile/steps/runMod/smoke/navigation-step.js",
+          "mobile/steps/runMod/smoke/supporticon-step.js"
+        ],
+        "severity": "MEDIUM"
+      },
+      {
+        "type": "step_conflict",
+        "pattern": "Alex clicks payroll link on menu page",
+        "keyword": "When",
+        "files": [
+          "mobile/steps/runMod/smoke/navigation-step.js",
+          "mobile/steps/runMod/smoke/supporticon-step.js"
+        ],
+        "severity": "MEDIUM"
+      },
+      {
+        "type": "step_conflict",
+        "pattern": "Alex should see payroll screen",
+        "keyword": "Then",
+        "files": [
+          "mobile/steps/runMod/smoke/navigation-step.js",
+          "mobile/steps/runMod/smoke/supporticon-step.js"
+        ],
+        "severity": "MEDIUM"
+      },
+      {
+        "type": "step_conflict",
+        "pattern": "Alex clicks people link on menu page",
+        "keyword": "When",
+        "files": [
+          "mobile/steps/runMod/smoke/navigation-step.js",
+          "mobile/steps/runMod/smoke/supporticon-step.js"
+        ],
+        "severity": "MEDIUM"
+      },
+      {
+        "type": "step_conflict",
+        "pattern": "Alex should see people screen",
+        "keyword": "Then",
+        "files": [
+          "mobile/steps/runMod/smoke/navigation-step.js",
+          "mobile/steps/runMod/smoke/supporticon-step.js"
+        ],
+        "severity": "MEDIUM"
+      },
+      {
+        "type": "step_conflict",
+        "pattern": "Alex should see employee screen",
+        "keyword": "Then",
+        "files": [
+          "mobile/steps/runMod/smoke/supporticon-step.js",
+          "mobile/steps/runMod/smoke/supporticon-step.js"
+        ],
+        "severity": "LOW"
+      },
+      {
+        "type": "step_conflict",
+        "pattern": "Alex clicks support icon",
+        "keyword": "When",
+        "files": [
+          "mobile/steps/runMod/smoke/supporticon-step.js",
+          "mobile/steps/runMod/smoke/supporticon-step.js"
+        ],
+        "severity": "LOW"
+      },
+      {
+        "type": "step_conflict",
+        "pattern": "Alex should see support page",
+        "keyword": "Then",
+        "files": [
+          "mobile/steps/runMod/smoke/supporticon-step.js",
+          "mobile/steps/runMod/smoke/supporticon-step.js"
+        ],
+        "severity": "LOW"
+      },
+      {
+        "type": "step_conflict",
+        "pattern": "Alex clicks report link on menu page",
+        "keyword": "When",
+        "files": [
+          "mobile/steps/runMod/smoke/navigation-step.js",
+          "mobile/steps/runMod/smoke/supporticon-step.js"
+        ],
+        "severity": "MEDIUM"
+      },
+      {
+        "type": "step_conflict",
+        "pattern": "Alex should see report screen",
+        "keyword": "Then",
+        "files": [
+          "mobile/steps/runMod/smoke/navigation-step.js",
+          "mobile/steps/runMod/smoke/supporticon-step.js"
+        ],
+        "severity": "MEDIUM"
+      }
+    ]
+  },
+  "recommendations": [
+    "URGENT: Address 472 step definition conflicts to prevent ambiguous matches",
+    "Consider organizing step definitions into domain-specific modules",
+    "HIGH PRIORITY: 408 high-severity conflicts detected across different modules",
+    "Use these registries with enhanced auto-coder generator for conflict-free artifact generation",
+    "Implement domain-specific prefixes for new step definitions",
+    "Regularly update registries as SBS_Automation framework evolves"
+  ],
+  "nextSteps": [
+    "Review and resolve high-severity conflicts",
+    "Implement enhanced auto-coder generator",
+    "Establish step definition naming conventions",
+    "Set up automated conflict detection in CI/CD"
+  ]
+}

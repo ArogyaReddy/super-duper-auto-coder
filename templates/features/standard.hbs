@@ -1,0 +1,18 @@
+@Team:AutoCoder @Category:Smoke @Generated @UI
+Feature: {{featureName}}
+  As a {{primaryRole}}
+  I want to {{primaryAction}}
+  So that {{primaryValue}}
+
+  Background:
+    Given I am authenticated in the system
+    And the application is ready for testing
+
+{{#each scenarios}}
+  @Priority:High @Component:{{../baseName}}
+  Scenario: {{name}}
+{{#each steps}}
+    {{this}}
+{{/each}}
+
+{{/each}}

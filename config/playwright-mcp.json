@@ -1,0 +1,19 @@
+{
+  "playwright-mcp-test-executor": {
+    "command": "node",
+    "args": ["/Users/gadea/auto/auto/qa_automation/auto-coder/utils/playwright-mcp-test-executor.js"],
+    "env": {
+      "NODE_ENV": "development",
+      "SBS_PATH": "/Users/gadea/auto/auto/qa_automation/SBS_Automation",
+      "AUTO_CODER_PATH": "/Users/gadea/auto/auto/qa_automation/auto-coder/SBS_Automation"
+    }
+  },
+  "enhanced-auto-coder-cli": {
+    "command": "node",
+    "args": ["/Users/gadea/auto/auto/qa_automation/auto-coder/utils/enhanced-auto-coder-cli.js"],
+    "env": {
+      "NODE_ENV": "development",
+      "AUTO_CODER_PATH": "/Users/gadea/auto/auto/qa_automation/auto-coder"
+    }
+  }
+}

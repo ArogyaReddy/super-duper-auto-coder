@@ -1,0 +1,79 @@
+{
+  "environment": "max-digitalplus",
+  "steps": "./support/steps",
+  "pageObjects": "./support/pages",
+  "data": "./support/data",
+  "featureFiles": "./SBS_Automation/features",
+  "reports": "./SBS_Automation/reports",
+  "browser": "chrome",
+  "timeout": 180000,
+  "headless": false,
+  "cleanup": false,
+  "baseUrl": "https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c",
+  "environments": {
+    "iat": {
+      "baseUrl": "https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c",
+      "apiUrl": "https://api.adp.com",
+      "auth": {
+        "enabled": true,
+        "loginUrl": "",
+        "username": "Arogya@24890183",
+        "password": "Test0705",
+        "selectors": {
+          "username": "input[name='user']",
+          "password": "input[name='password']",
+          "submit": "button[type='submit'], input[type='submit'], .signin-button"
+        }
+      }
+    },
+    "fit": {
+      "baseUrl": "https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c",
+      "apiUrl": "https://api.adp.com",
+      "auth": {
+        "enabled": true,
+        "loginUrl": "",
+        "username": "Arogya@24448881",
+        "password": "Test0705",
+        "selectors": {
+          "username": "input[name='user']",
+          "password": "input[name='password']",
+          "submit": "button[type='submit'], input[type='submit'], .signin-button"
+        }
+      }
+    },
+    "staging": {
+      "baseUrl": "https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c", 
+      "apiUrl": "https://api-staging.sbs-automation.com",
+      "auth": {
+        "enabled": true,
+        "loginUrl": "/login",
+        "username": "Arogya@24448881",
+        "password": "Test0705"
+      }
+    },
+    "local": {
+      "baseUrl": "http://localhost:3000",
+      "apiUrl": "http://localhost:3001",
+      "auth": {
+        "enabled": false
+      }
+    },
+    "max-digitalplus": {
+      "baseUrl": "https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c",
+      "apiUrl": "https://api.max.application.com",
+      "auth": {
+        "enabled": true,
+        "loginUrl": "",
+        "username": "Arogya@24448881",
+        "password": "Test0705",
+        "selectors": {
+          "username": "#login-form_username",
+          "password": "#login-form_password",
+          "verifyButton": "#verifUseridBtn, #btnNext",
+          "remindLaterButton": "//*[text() = 'Remind me later']",
+          "submit": "#signBtn, #btnNext"
+        }
+      }
+    }
+  }
+}

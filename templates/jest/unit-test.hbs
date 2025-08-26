@@ -1,0 +1,179 @@
+{{!-- Jest Unit Test Template with Inheritance --}}
+{{extend "base-test-base"}}
+
+{{#override imports "replace"}}
+{{#if theme.conventions.naming.classes "PascalCase"}}
+const {{PascalCase moduleName}} = require('../{{kebab-case moduleName}}');
+{{else}}
+const {{camelCase moduleName}} = require('../{{kebab-case moduleName}}');
+{{/if}}
+{{#if features.mocking}}
+{{#each mockDependencies}}
+jest.mock('{{this.module}}', () => ({
+    {{#each this.methods}}
+    {{this.name}}: jest.fn(){{#unless @last}},{{/unless}}
+    {{/each}}
+}));
+{{/each}}
+{{/if}}
+{{#if features.testingLibrary}}
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
+{{/if}}
+{{/override}}
+
+{{#override setup "extend"}}
+describe('{{moduleName}}', () => {
+    {{#block jestSetup}}
+    {{#if features.mocking}}
+    beforeEach(() => {
+        // Clear all mocks before each test
+        jest.clearAllMocks();
+        
+        {{#if theme.styles.verboseLogging}}
+        console.log('🃏 Mocks cleared for test: {{testName}}');
+        {{/if}}
+    });
+    {{/if}}
+    
+    {{#if features.testData}}
+    let testData;
+    beforeEach(() => {
+        testData = {
+            {{#each testData}}
+            {{@key}}: {{json this}}{{#unless @last}},{{/unless}}
+            {{/each}}
+        };
+    });
+    {{/if}}
+    {{/block}}
+{{/override}}
+
+{{#override content "replace"}}
+    {{#each testSuites}}
+    describe('{{this.description}}', () => {
+        {{#each this.tests}}
+        {{#if this.skip}}
+        it.skip('{{this.description}}', () => {
+        {{else if this.only}}
+        it.only('{{this.description}}', {{#if this.async}}async {{/if}}() => {
+        {{else}}
+        it('{{this.description}}', {{#if this.async}}async {{/if}}() => {
+        {{/if}}
+            {{#block jestTestBody}}
+            {{#if this.arrange}}
+            // Arrange
+            {{#each this.arrange}}
+            {{this}}
+            {{/each}}
+            {{/if}}
+            
+            {{#if ../features.mocking}}
+            {{#each this.mockSetup}}
+            {{this.mockName}}.{{this.method}}.mockReturnValue({{json this.returnValue}});
+            {{/each}}
+            {{/if}}
+            
+            {{#if this.act}}
+            // Act
+            {{#if this.async}}
+            const result = await {{this.act}};
+            {{else}}
+            const result = {{this.act}};
+            {{/if}}
+            {{/if}}
+            
+            {{#if this.assert}}
+            // Assert
+            {{#each this.assert}}
+            {{#if this.type "toBe"}}
+            expect({{this.actual}}).toBe({{json this.expected}});
+            {{else if this.type "toEqual"}}
+            expect({{this.actual}}).toEqual({{json this.expected}});
+            {{else if this.type "toThrow"}}
+            expect(() => {{this.actual}}).toThrow({{#if this.expected}}'{{this.expected}}'{{/if}});
+            {{else if this.type "toHaveBeenCalled"}}
+            expect({{this.actual}}).toHaveBeenCalled();
+            {{else if this.type "toHaveBeenCalledWith"}}
+            expect({{this.actual}}).toHaveBeenCalledWith({{#each this.expected}}{{json this}}{{#unless @last}}, {{/unless}}{{/each}});
+            {{else}}
+            expect({{this.actual}}).{{this.type}}({{#if this.expected}}{{json this.expected}}{{/if}});
+            {{/if}}
+            {{/each}}
+            {{/if}}
+            
+            {{#if ../features.testingLibrary}}
+            {{#each this.domAssertions}}
+            {{#if this.type "toBeInTheDocument"}}
+            expect(screen.getByText('{{this.text}}')).toBeInTheDocument();
+            {{else if this.type "toHaveValue"}}
+            expect(screen.getByRole('{{this.role}}')).toHaveValue('{{this.value}}');
+            {{else if this.type "toBeVisible"}}
+            expect(screen.getByTestId('{{this.testId}}')).toBeVisible();
+            {{/if}}
+            {{/each}}
+            {{/if}}
+            {{/block}}
+        });
+        {{/each}}
+    });
+    {{/each}}
+{{/override}}
+
+{{#override teardown "extend"}}
+    {{#block jestTeardown}}
+    afterEach(() => {
+        {{#if features.mocking}}
+        // Restore all mocks
+        jest.restoreAllMocks();
+        {{/if}}
+        
+        {{#if theme.styles.verboseLogging}}
+        console.log('🧹 Jest test cleanup completed');
+        {{/if}}
+    });
+    {{/block}}
+{{/override}}
+
+{{#override helpers "append"}}
+{{#block jestHelpers}}
+// Jest-specific helper functions
+function createMockFunction(returnValue) {
+    return jest.fn().mockReturnValue(returnValue);
+}
+
+function createAsyncMockFunction(resolveValue) {
+    return jest.fn().mockResolvedValue(resolveValue);
+}
+
+function expectMockToHaveBeenCalledWithObject(mockFn, expectedObject) {
+    expect(mockFn).toHaveBeenCalledWith(
+        expect.objectContaining(expectedObject)
+    );
+}
+
+{{#if features.testingLibrary}}
+// Testing Library helpers
+async function waitForElementToAppear(text) {
+    return await waitFor(() => {
+        expect(screen.getByText(text)).toBeInTheDocument();
+    });
+}
+
+function getElementByTestId(testId) {
+    return screen.getByTestId(testId);
+}
+
+function queryElementByText(text) {
+    return screen.queryByText(text);
+}
+{{/if}}
+
+{{#if features.snapshots}}
+// Snapshot testing helpers
+function expectMatchSnapshot(component) {
+    expect(component).toMatchSnapshot();
+}
+{{/if}}
+{{/block}}
+{{/override}}

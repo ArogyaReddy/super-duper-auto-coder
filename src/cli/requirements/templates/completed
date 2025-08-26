@@ -1,0 +1,56 @@
+<!-- 
+🎯 BDD TEMPLATE - Requirements Entry
+📅 Created: 2025-07-24T20:34:02.709Z
+📋 Instructions:
+   1. Fill in your requirements below
+   2. Replace all <placeholder> text with actual requirements
+   3. Use clear Given-When-Then-And format
+   4. Save file when done (Ctrl+S)
+   5. Return to CLI to generate artifacts
+
+🚀 This template will generate:
+   - Feature file (.feature)
+   - Steps file (-steps.js) 
+   - Page file (-page.js)
+-->
+
+# Requirement Entry
+
+## 📝 Basic Information
+
+**Feature Title**: <Enter your feature name>
+
+**Description**: <Brief description of what this feature does>
+
+## 👤 User Story
+
+**As a** <type of user>
+**I want** <some goal or functionality>
+**So that** <some reason or benefit>
+
+## 🥒 BDD Scenarios
+
+### Scenario 1: <Scenario Name>
+**Given** <starting condition or context>
+**When** <action performed or trigger>
+**Then** <expected outcome or result>
+**And** <additional verification if needed>
+
+### Scenario 2: <Scenario Name>
+**Given** <starting condition or context>
+**When** <action performed or trigger>
+**Then** <expected outcome or result>
+**And** <additional verification if needed>
+
+### Scenario 3: <Additional scenario if needed>
+**Given** <starting condition or context>
+**When** <action performed or trigger>
+**Then** <expected outcome or result>
+**And** <additional verification if needed>
+
+## 🚩 Feature Flags (Optional)
+**Feature Flags**: <None or specify flags needed>
+
+---
+📋 **Template Status**: Ready for completion
+🎯 **Next Step**: Fill in requirements above and return to CLI

@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "lastUpdated": "2025-08-05",
+    "source": "SBS_Automation Framework User Roles",
+    "purpose": "User roles and personas for auto-coder framework"
+  },
+  "testActors": {
+    "primary": {
+      "name": "Alex",
+      "description": "Primary test user for SBS_Automation framework",
+      "usage": "Standard test scenarios and user interactions"
+    },
+    "secondary": {
+      "name": "User",
+      "description": "Generic user for basic operations",
+      "usage": "Simple user actions and verifications"
+    }
+  },
+  "businessRoles": {
+    "payroll": {
+      "administrator": "Payroll Administrator",
+      "manager": "Payroll Manager", 
+      "processor": "Payroll Processor",
+      "employee": "Employee"
+    },
+    "billing": {
+      "administrator": "Billing Administrator",
+      "accountant": "Accountant",
+      "manager": "Billing Manager",
+      "client": "Client"
+    },
+    "system": {
+      "admin": "System Administrator",
+      "support": "Support User",
+      "readonly": "Read-only User"
+    }
+  },
+  "permissions": {
+    "payroll": {
+      "read": ["view payroll data", "access reports"],
+      "write": ["process payroll", "modify employee data"],
+      "admin": ["configure payroll settings", "manage users"]
+    },
+    "billing": {
+      "read": ["view invoices", "access billing reports"],
+      "write": ["create invoices", "process payments"],
+      "admin": ["configure billing settings", "manage billing users"]
+    }
+  },
+  "testScenarios": {
+    "standardUser": {
+      "actor": "Alex",
+      "context": "logged into RunMod with a homepage test client",
+      "capabilities": ["navigate", "view", "interact with UI elements"]
+    },
+    "adminUser": {
+      "actor": "Alex",
+      "context": "logged in as administrator",
+      "capabilities": ["configure", "manage", "administer system"]
+    }
+  }
+}

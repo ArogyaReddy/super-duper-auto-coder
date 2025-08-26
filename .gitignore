@@ -1,0 +1,101 @@
+# Auto-Coder Git Ignore - Local Only
+
+# Node modules
+node_modules/
+npm-debug.log*
+
+# Generated test results and reports
+test-results/
+playwright-report/
+reports/
+generated/reports
+generated/playwright-report
+generated/screenshots
+generated/videos
+generated/traces
+generated/artifacts
+generated/results.json
+generated/html-report
+
+# SBS_Automation is PROTECTED - don't track changes
+SBS_Automation/features/
+SBS_Automation/steps/
+SBS_Automation/pages/
+SBS_Automation/tests/
+SBS_Automation/reports/
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+*.swp
+*.swo
+
+# Environment files
+.env
+.env.local
+
+# Log files
+*.log
+logs/
+
+# Cache directories
+.cache/
+cache/
+
+# Backup files
+*.bak
+*.backup
+
+# Large docs and backups
+knowledge-base/docs/20250721.md
+knowledge-base/docs/backup/
+generated2/
+generated1/
+archive/old-docs/
+generated/custom
+generated/**/*.log
+generated/**/*.tmp
+generated/**/*.bak
+output/
+coverage/
+.env
+.DS_Store
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.idea/
+.vscode/
+dist/
+build/
+*.tgz
+*.zip
+*.tar.gz
+*.tar
+npm-debug.log*
+yarn-error.log*
+package-lock.json
+pnpm-lock.yaml
+*.pid
+*.seed
+*.sqlite
+*.db
+*.db-journal
+*.sqlite3
+*.sqlite3-journal
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+
+# Problematic command artifacts
+taskkill*/
+**/taskkill*
+data/
+requirements/confluence/

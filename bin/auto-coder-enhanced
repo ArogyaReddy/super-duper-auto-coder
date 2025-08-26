@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# 🚀 Enhanced Auto-Coder CLI - Wrapper Script
+# Complete CLI for SBS_Automation test artifact generation and execution
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+AUTO_CODER_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Set environment variables
+export NODE_ENV="development"
+export AUTO_CODER_PATH="/Users/gadea/auto/auto/qa_automation/auto-coder"
+export SBS_PATH="/Users/gadea/auto/auto/qa_automation/SBS_Automation"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+NC='\033[0m' # No Color
+
+echo -e "${PURPLE}🚀 Enhanced Auto-Coder CLI${NC}"
+echo -e "${YELLOW}===============================================${NC}"
+
+# Check if Node.js is available
+if ! command -v node &> /dev/null; then
+    echo -e "${RED}❌ Node.js not found. Please install Node.js first.${NC}"
+    exit 1
+fi
+
+# Execute the enhanced auto-coder CLI
+cd "$AUTO_CODER_DIR"
+node utils/enhanced-auto-coder-cli.js "$@"
+
+exit_code=$?
+
+if [ $exit_code -eq 0 ]; then
+    echo -e "${GREEN}✅ Auto-Coder CLI completed successfully${NC}"
+else
+    echo -e "${RED}❌ Auto-Coder CLI failed with exit code $exit_code${NC}"
+fi
+
+exit $exit_code

@@ -1,0 +1,79 @@
+{
+  "id": "minimal-clean",
+  "name": "Minimal Clean",
+  "type": "visual",
+  "description": "Clean, minimal theme with essential elements only",
+  "version": "1.0.0",
+  "author": "Auto-Coder Framework",
+  "supportedFrameworks": ["all"],
+  "styles": {
+    "comments": false,
+    "verboseLogging": false,
+    "exampleData": false,
+    "documentation": "minimal",
+    "typeAnnotations": false,
+    "screenshots": false,
+    "errorHandling": "basic"
+  },
+  "patterns": {
+    "testStructure": "flat",
+    "assertions": "simple",
+    "setup": "inline",
+    "mocking": "basic"
+  },
+  "conventions": {
+    "naming": {
+      "variables": "camelCase",
+      "functions": "camelCase",
+      "files": "kebab-case",
+      "testFiles": "*.test.js"
+    },
+    "structure": {
+      "fileOrganization": "flat",
+      "importStyle": "simple",
+      "exportStyle": "default"
+    }
+  },
+  "formatting": {
+    "indentation": 2,
+    "lineLength": 80,
+    "quotes": "single",
+    "semicolons": false,
+    "trailingCommas": "never",
+    "braceStyle": "1tbs"
+  },
+  "frameworks": {
+    "playwright": {
+      "styles": {
+        "pageObjects": false,
+        "fixtures": false,
+        "screenshots": false
+      },
+      "patterns": {
+        "selectors": "simple",
+        "waiting": "basic"
+      }
+    },
+    "jest": {
+      "styles": {
+        "mocking": false,
+        "snapshots": false,
+        "coverage": false
+      },
+      "patterns": {
+        "testStructure": "simple",
+        "assertions": "basic"
+      }
+    }
+  },
+  "quality": {
+    "documentation": {
+      "required": false,
+      "level": "minimal"
+    },
+    "errorHandling": {
+      "required": false,
+      "level": "basic"
+    }
+  }
+}

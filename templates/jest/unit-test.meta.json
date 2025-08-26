@@ -1,0 +1,87 @@
+{
+  "id": "jest-unit-test",
+  "name": "Jest Unit Test Template",
+  "version": "1.0.0",
+  "type": "test",
+  "framework": ["jest"],
+  "theme": "standard",
+  "extends": "test-base",
+  "description": "Comprehensive Jest unit test template with mocking and Testing Library support",
+  "author": "Auto-Coder Framework",
+  "compatibility": ["jest", "testing-library"],
+  "dependencies": ["test-base"],
+  "features": ["mocking", "testingLibrary", "snapshots", "testData"],
+  "variables": [
+    {
+      "name": "moduleName",
+      "type": "string",
+      "required": true,
+      "description": "Name of the module being tested"
+    },
+    {
+      "name": "testSuites",
+      "type": "array",
+      "required": true,
+      "description": "Array of test suites with nested tests"
+    },
+    {
+      "name": "mockDependencies",
+      "type": "array",
+      "required": false,
+      "description": "Dependencies to mock"
+    },
+    {
+      "name": "testData",
+      "type": "object",
+      "required": false,
+      "description": "Test data object"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Calculator Unit Test",
+      "context": {
+        "moduleName": "Calculator",
+        "testSuites": [
+          {
+            "description": "basic arithmetic operations",
+            "tests": [
+              {
+                "description": "should add two numbers correctly",
+                "arrange": [
+                  "const calculator = new Calculator();",
+                  "const a = 5;",
+                  "const b = 3;"
+                ],
+                "act": "calculator.add(a, b)",
+                "assert": [
+                  {
+                    "type": "toBe",
+                    "actual": "result",
+                    "expected": 8
+                  }
+                ]
+              },
+              {
+                "description": "should handle division by zero",
+                "arrange": [
+                  "const calculator = new Calculator();"
+                ],
+                "act": "() => calculator.divide(10, 0)",
+                "assert": [
+                  {
+                    "type": "toThrow",
+                    "actual": "() => calculator.divide(10, 0)",
+                    "expected": "Division by zero"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "tags": ["jest", "unit", "mocking", "inheritance"],
+  "category": "testing"
+}

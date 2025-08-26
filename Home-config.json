@@ -1,0 +1,57 @@
+{
+  "baseUrl": "https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c",
+  "credentials": {
+    "username": "GarylLsH@26067183",
+    "password": "Test2468"
+  },
+  "pageFileName": "Home.js",
+  "navigationSteps": [
+    {
+      "type": "wait",
+      "description": "Wait for app to load",
+      "duration": 3000
+    },
+    {
+      "type": "click",
+      "description": "Click Home menu",
+      "selector": "",
+      "context": {
+        "shadow": true,
+        "shadowHost": "sfc-shell-left-nav",
+        "shadowDepth": 1
+      }
+    },
+    {
+      "type": "wait",
+      "description": "Wait for page to load",
+      "duration": 2000
+    }
+  ],
+  "elementsToCapture": [
+    {
+      "description": "Page Header"
+    },
+    {
+      "description": "Main Action Button"
+    },
+    {
+      "description": "Menu Item"
+    }
+  ],
+  "navigationInfo": {
+    "targetPage": "Home",
+    "steps": [
+      {
+        "type": "click",
+        "description": "Click Home menu",
+        "selector": "",
+        "context": {
+          "shadow": true,
+          "shadowHost": "sfc-shell-left-nav",
+          "shadowDepth": 1
+        },
+        "variableName": "menuElement"
+      }
+    ]
+  }
+}

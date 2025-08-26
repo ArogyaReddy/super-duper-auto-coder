@@ -1,0 +1,44 @@
+{
+  "default": {
+    "require": [
+      "generated/steps/**/*.js",
+      "generated/support/**/*.js"
+    ],
+    "format": [
+      "progress-bar",
+      "json:generated/test-results/cucumber-report.json",
+      "html:generated/test-results/cucumber-report.html"
+    ],
+    "formatOptions": {
+      "snippetInterface": "async-await"
+    },
+    "worldParameters": {
+      "browser": "chromium",
+      "headless": false,
+      "baseURL": "http://localhost:3000"
+    },
+    "parallel": 2,
+    "retry": 1,
+    "tags": "not @skip"
+  },
+  "ci": {
+    "requireModule": ["ts-node/register"],
+    "require": [
+      "generated/steps/**/*.js",
+      "generated/support/**/*.js"
+    ],
+    "format": [
+      "progress-bar",
+      "json:generated/test-results/cucumber-report.json",
+      "junit:generated/test-results/cucumber-report.xml"
+    ],
+    "worldParameters": {
+      "browser": "chromium",
+      "headless": true,
+      "baseURL": "http://localhost:3000"
+    },
+    "parallel": 4,
+    "retry": 2,
+    "tags": "not @skip and not @manual"
+  }
+}

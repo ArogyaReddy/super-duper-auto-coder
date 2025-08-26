@@ -1,0 +1,56 @@
+{
+  "steps": [],
+  "methods": [],
+  "patterns": {
+    "leftNavigation": [
+      {
+        "file": "/steps/ac/accountant/ac-left-navigation-steps.js",
+        "methods": []
+      },
+      {
+        "file": "/steps/ac/mca/mca-left-navigation-steps.js",
+        "methods": []
+      },
+      {
+        "file": "/steps/ac/wholesaleAC/wholesale-left-navigation-steps.js",
+        "methods": []
+      },
+      {
+        "file": "/pages/ac/accountant/ac-left-navigation-page.js",
+        "methods": [
+          {
+            "name": "clickLeftMenuItem",
+            "signature": "async clickLeftMenuItem(menuValue) {"
+          },
+          {
+            "name": "isACLeftMenuDisplayed",
+            "signature": "async isACLeftMenuDisplayed(menuValue) {"
+          }
+        ]
+      },
+      {
+        "file": "/pages/ac/mca/mca-left-navigation-page.js",
+        "methods": [
+          {
+            "name": "clickLeftMenuItem",
+            "signature": "async clickLeftMenuItem(menuContainer) {"
+          }
+        ]
+      }
+    ],
+    "hoverMenus": [
+      {
+        "file": "/pages/runMod/employee-menu/employee-menu-page.js",
+        "methods": [
+          {
+            "name": "hoverOverMenuAndSelectSubMenu",
+            "signature": "async hoverOverMenuAndSelectSubMenu(menuItem, subMenu) {"
+          }
+        ]
+      }
+    ],
+    "kebabMenus": [],
+    "dropdowns": [],
+    "menuClicks": []
+  }
+}

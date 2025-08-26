@@ -1,0 +1,4 @@
+curl --location 'https://runtoolapiportal-qafit.nj.adp.com/runessmobileapi/core/v1/cashflow-central/account-info' \
+--header 'orgoid: G33NDM155BKCCCGW' \
+--header 'associateoid: G3J6TNA2T4RD4YWY' \
+--header 'Cookie: BIGipServerp_runtoolapiportal-qafit.nj.adp.com=3530428427.12576.0000'

@@ -1,0 +1,227 @@
+{
+  "_comment": "🎯 GLOBAL TEMPLATE FOR ANY PAGE CAPTURE AFTER LOGIN",
+  "_instructions": [
+    "1. Copy this file and rename it to your-page-config.json",
+    "2. Update baseUrl, credentials, and targetPage",
+    "3. Customize navigationSteps for your specific page",
+    "4. List elements you want to capture",
+    "5. Run: node scripts/one-command-advanced.js your-page-config.json"
+  ],
+  
+  "baseUrl": "https://your-app-domain.com",
+  "credentials": {
+    "username": "your-username@example.com",
+    "password": "your-password",
+    "_note": "Optional - remove if no login needed"
+  },
+  
+  "pageFileName": "your-page-name.js",
+  "_pageNamingTip": "Use kebab-case like: billing-invoice-page.js, user-profile-page.js",
+  
+  "navigationSteps": [
+    {
+      "type": "wait",
+      "description": "Wait for app to fully load",
+      "duration": 3000,
+      "_note": "Always start with this to ensure app is ready"
+    },
+    {
+      "type": "click", 
+      "description": "Click main menu item",
+      "selector": "[data-id='menu-item']",
+      "context": {
+        "shadow": true,
+        "shadowHost": "sfc-shell-left-nav",
+        "shadowDepth": 1,
+        "_alternatives": {
+          "depth2": {
+            "shadowHost": "sfc-shell-left-nav",
+            "shadowRoot": "li:nth-child(N) > sfc-shell-left-nav-section", 
+            "shadowDepth": 2
+          },
+          "iframe": {
+            "iframe": "#shell"
+          },
+          "direct": {
+            "shadow": false
+          }
+        }
+      },
+      "_tips": [
+        "Most menu items are in Shadow DOM depth 1 or 2",
+        "Common shadowHosts: sfc-shell-left-nav, sfc-shell-app-bar, oneux-header",
+        "Check browser DevTools to find exact selectors"
+      ]
+    },
+    {
+      "type": "wait",
+      "description": "Wait for page to load",
+      "duration": 2000,
+      "_note": "Always wait after navigation"
+    },
+    {
+      "type": "modal",
+      "description": "Handle any modal/overlay that appears",
+      "modalSelector": "[role='dialog'], .modal, [class*='modal'], [class*='overlay']",
+      "optional": true,
+      "_note": "Remove this step if page doesn't have modals"
+    }
+  ],
+  
+  "elementsToCapture": [
+    {
+      "description": "Page Header",
+      "_examples": ["Dashboard Header", "Billing Page Title", "User Profile Header"]
+    },
+    {
+      "description": "Primary Action Button", 
+      "_examples": ["Save Button", "Submit Button", "Create New Button"]
+    },
+    {
+      "description": "Navigation Menu Item",
+      "_examples": ["Billing Menu", "Users Menu", "Reports Menu"] 
+    },
+    {
+      "description": "Form Field",
+      "_examples": ["Username Field", "Email Input", "Amount Field"]
+    },
+    {
+      "description": "Data Table",
+      "_examples": ["User List Table", "Transaction History", "Report Grid"]
+    }
+  ],
+  
+  "navigationInfo": {
+    "targetPage": "YourPageName",
+    "_tip": "Use PascalCase like: BillingInvoice, UserProfile, ReportDashboard",
+    "steps": [
+      {
+        "type": "click",
+        "description": "Navigate to your page",
+        "selector": "[data-id='your-menu']",
+        "context": {
+          "shadow": true,
+          "shadowHost": "sfc-shell-left-nav",
+          "shadowDepth": 1
+        },
+        "variableName": "yourMenuElement"
+      }
+    ]
+  },
+  
+  "_commonPatterns": {
+    "shadowDOMDepth1": {
+      "type": "click",
+      "selector": "[data-id='element']", 
+      "context": {
+        "shadow": true,
+        "shadowHost": "sfc-shell-left-nav",
+        "shadowDepth": 1
+      }
+    },
+    "shadowDOMDepth2": {
+      "type": "click",
+      "selector": "[data-id='element']",
+      "context": {
+        "shadow": true,
+        "shadowHost": "sfc-shell-left-nav", 
+        "shadowRoot": "li:nth-child(2) > sfc-shell-left-nav-section",
+        "shadowDepth": 2
+      }
+    },
+    "iframeElement": {
+      "type": "click",
+      "selector": "[data-test-id='element']",
+      "context": {
+        "iframe": "#shell"
+      }
+    },
+    "modalElement": {
+      "type": "modal",
+      "modalSelector": "[role='dialog']"
+    },
+    "directElement": {
+      "type": "click",
+      "selector": "[data-test-id='element']",
+      "context": {
+        "shadow": false
+      }
+    }
+  },
+  
+  "_commonShadowHosts": [
+    "sfc-shell-left-nav",
+    "sfc-shell-app-bar", 
+    "oneux-header",
+    "sdf-menu",
+    "sdf-button",
+    "sdf-input"
+  ],
+  
+  "_commonIframes": [
+    "#shell",
+    "#iPDetail", 
+    "iframe[name='main']",
+    "iframe[src*='app']"
+  ],
+  
+  "_commonSelectors": [
+    "[data-test-id='element-name']",
+    "[data-e2e='element-name']", 
+    "[data-id='element-name']",
+    "[aria-label='element description']",
+    "button:has-text('Button Text')",
+    "input[name='field-name']",
+    ".class-name",
+    "#element-id"
+  ],
+  
+  "_quickStartExamples": {
+    "billingPage": {
+      "pageFileName": "billing-invoice-page.js",
+      "navigationSteps": [
+        {
+          "type": "click",
+          "description": "Click Billing menu",
+          "selector": "[data-id='billing']",
+          "context": {
+            "shadow": true,
+            "shadowHost": "sfc-shell-left-nav",
+            "shadowDepth": 2,
+            "shadowRoot": "li:nth-child(2) > sfc-shell-left-nav-section"
+          }
+        }
+      ]
+    },
+    "userProfilePage": {
+      "pageFileName": "user-profile-page.js", 
+      "navigationSteps": [
+        {
+          "type": "click",
+          "description": "Click user profile",
+          "selector": ".logged-in-user",
+          "context": {
+            "shadow": true,
+            "shadowHost": "oneux-header > sfc-shell-app-bar",
+            "shadowDepth": 1
+          }
+        }
+      ]
+    },
+    "adminPage": {
+      "pageFileName": "admin-settings-page.js",
+      "navigationSteps": [
+        {
+          "type": "click", 
+          "description": "Click Admin menu",
+          "selector": "[data-id='admin']",
+          "context": {
+            "shadow": true,
+            "shadowHost": "sfc-shell-left-nav",
+            "shadowDepth": 1
+          }
+        }
+      ]
+    }
+  }
+}

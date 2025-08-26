@@ -1,0 +1,62 @@
+{
+  "platforms": {
+    "darwin": {
+      "frameworkRoot": "/Users/gadea/auto/auto/qa_automation/auto-coder",
+      "promptFiles": {
+        "ultimate": "/Users/gadea/auto/auto/qa_automation/auto-coder/.github/ULTIMATE-GPT-SYSTEM-PROMPT.md",
+        "generateTest": "/Users/gadea/auto/auto/qa_automation/auto-coder/.github/generate-test-artifacts.prompt.md",
+        "runTest": "/Users/gadea/auto/auto/qa_automation/auto-coder/.github/run-test-artifacts.prompt.md"
+      },
+      "shell": "/bin/bash",
+      "pathSeparator": "/",
+      "commands": {
+        "open": "open",
+        "copy": "cp",
+        "remove": "rm -rf",
+        "mkdir": "mkdir -p"
+      }
+    },
+    "win32": {
+      "frameworkRoot": "C:\\Users\\gadea\\auto\\auto\\qa_automation\\auto-coder",
+      "promptFiles": {
+        "ultimate": "C:\\Users\\gadea\\auto\\auto\\qa_automation\\auto-coder\\.github\\ULTIMATE-GPT-SYSTEM-PROMPT.md",
+        "generateTest": "C:\\Users\\gadea\\auto\\auto\\qa_automation\\auto-coder\\.github\\generate-test-artifacts.prompt.md",
+        "runTest": "C:\\Users\\gadea\\auto\\auto\\qa_automation\\auto-coder\\.github\\run-test-artifacts.prompt.md"
+      },
+      "shell": "pwsh.exe",
+      "pathSeparator": "\\",
+      "commands": {
+        "open": "start",
+        "copy": "Copy-Item",
+        "remove": "Remove-Item -Recurse -Force",
+        "mkdir": "New-Item -ItemType Directory -Force"
+      }
+    },
+    "linux": {
+      "frameworkRoot": "/home/gadea/auto/auto/qa_automation/auto-coder",
+      "promptFiles": {
+        "ultimate": "/home/gadea/auto/auto/qa_automation/auto-coder/.github/ULTIMATE-GPT-SYSTEM-PROMPT.md",
+        "generateTest": "/home/gadea/auto/auto/qa_automation/auto-coder/.github/generate-test-artifacts.prompt.md",
+        "runTest": "/home/gadea/auto/auto/qa_automation/auto-coder/.github/run-test-artifacts.prompt.md"
+      },
+      "shell": "/bin/bash",
+      "pathSeparator": "/",
+      "commands": {
+        "open": "xdg-open",
+        "copy": "cp",
+        "remove": "rm -rf",
+        "mkdir": "mkdir -p"
+      }
+    }
+  },
+  "environment": "local",
+  "steps": "./SBS_Automation/steps",
+  "pageObjects": "./SBS_Automation/pages",
+  "data": "./support/data",
+  "featureFiles": "./SBS_Automation/features",
+  "reports": "./SBS_Automation/reports",
+  "browser": "chrome",
+  "timeout": 180000,
+  "headless": false,
+  "cleanup": false
+}

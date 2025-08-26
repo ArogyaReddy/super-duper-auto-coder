@@ -1,0 +1,24 @@
+{
+  "description": "Path configuration for referencing main SBS_Automation framework",
+  "sbsAutomationRoot": "../SBS_Automation",
+  "referencePaths": {
+    "pages": {
+      "common": "../SBS_Automation/pages/common",
+      "base": "../SBS_Automation/pages/common/base-page.js"
+    },
+    "support": {
+      "by": "../SBS_Automation/support/By.js",
+      "helpers": "../SBS_Automation/support/helpers.js"
+    },
+    "generated": {
+      "features": "./SBS_Automation/features",
+      "steps": "./SBS_Automation/steps", 
+      "pages": "./SBS_Automation/pages"
+    }
+  },
+  "deployment": {
+    "targetDirectory": "../SBS_Automation",
+    "copyOnGenerate": false,
+    "useReferences": true
+  }
+}

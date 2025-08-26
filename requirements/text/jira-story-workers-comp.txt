@@ -1,0 +1,14 @@
+Tax move Workers' comp under a new Additional requirements step
+
+Add a new Additional requirements step and move Workers' comp substep under this item. Use the existing logic to determine whether to show it or not. The entire step will be hidden if Workers' comp is not to be shown. In the future RS will have a part in this but not specifically for this step.
+
+Use the existing Workers' comp step content for now. This will most likely change in the future. Separate story will be written for modifying the tax summary page as well.
+
+FF: taxprofile - enableAdditionalRequirementsStep
+
+Acceptance criteria:
+
+When Workers' comp is to be shown the Workers' comp substep is shown under Additional requirements
+If Workers' comp is not shown the Additional requirements step is not included
+With FF off Workers' comp will show under the existing previous step
+With FF on Workers' comp will NOT show under the original step

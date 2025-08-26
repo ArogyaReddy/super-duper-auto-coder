@@ -1,0 +1,54 @@
+{
+  "baseUrl": "https://your-app-domain.com",
+  "credentials": {
+    "username": "your-username@example.com",
+    "password": "your-password"
+  },
+  "pageFileName": "your-page-name.js",
+  
+  "navigationSteps": [
+    {
+      "type": "wait",
+      "description": "Wait for app to load",
+      "duration": 3000
+    },
+    {
+      "type": "click",
+      "description": "Click menu item to navigate to page",
+      "selector": "[data-id='menu-item-name']",
+      "context": {
+        "shadow": true,
+        "shadowHost": "sfc-shell-left-nav",
+        "shadowDepth": 1
+      }
+    },
+    {
+      "type": "wait", 
+      "description": "Wait for page to load",
+      "duration": 2000
+    }
+  ],
+  
+  "elementsToCapture": [
+    { "description": "Page Header" },
+    { "description": "Main Action Button" },
+    { "description": "Menu Item" }
+  ],
+  
+  "navigationInfo": {
+    "targetPage": "YourPageName",
+    "steps": [
+      {
+        "type": "click",
+        "description": "Navigate to your page", 
+        "selector": "[data-id='menu-item-name']",
+        "context": {
+          "shadow": true,
+          "shadowHost": "sfc-shell-left-nav",
+          "shadowDepth": 1
+        },
+        "variableName": "menuElement"
+      }
+    ]
+  }
+}

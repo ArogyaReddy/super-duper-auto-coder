@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "lastUpdated": "2025-08-05",
+    "source": "SBS_Automation Framework Actions",
+    "purpose": "Action vocabulary for auto-coder framework"
+  },
+  "navigationActions": {
+    "primary": [
+      "navigate", "go to", "visit", "access", "open", "enter"
+    ],
+    "menu": [
+      "select from menu", "choose option", "click menu item", "expand menu"
+    ],
+    "links": [
+      "click link", "follow link", "select link", "access via link"
+    ]
+  },
+  "interactionActions": {
+    "clicking": [
+      "click", "tap", "select", "choose", "press", "activate"
+    ],
+    "typing": [
+      "enter", "type", "input", "fill", "write", "provide"
+    ],
+    "selection": [
+      "select", "choose", "pick", "opt for", "decide on"
+    ],
+    "upload": [
+      "upload", "attach", "import", "load", "submit file"
+    ]
+  },
+  "verificationActions": {
+    "visibility": [
+      "verify", "check", "confirm", "validate", "see", "observe", "view"
+    ],
+    "state": [
+      "is displayed", "is visible", "is enabled", "is clickable", "exists", "is present"
+    ],
+    "content": [
+      "contains", "shows", "displays", "includes", "has", "presents"
+    ]
+  },
+  "dataActions": {
+    "retrieval": [
+      "get", "fetch", "retrieve", "obtain", "acquire", "access"
+    ],
+    "modification": [
+      "update", "modify", "change", "edit", "alter", "revise"
+    ],
+    "creation": [
+      "create", "add", "insert", "generate", "make", "establish"
+    ],
+    "deletion": [
+      "delete", "remove", "clear", "erase", "eliminate", "discard"
+    ]
+  },
+  "systemActions": {
+    "authentication": [
+      "log in", "sign in", "authenticate", "login", "access system"
+    ],
+    "session": [
+      "log out", "sign out", "end session", "disconnect", "exit"
+    ],
+    "processing": [
+      "process", "execute", "run", "perform", "carry out", "complete"
+    ]
+  },
+  "contextualActions": {
+    "payroll": [
+      "process payroll", "calculate payroll", "generate paystubs", "approve payroll"
+    ],
+    "billing": [
+      "generate invoice", "process payment", "send statement", "calculate charges"
+    ],
+    "reporting": [
+      "generate report", "export data", "create summary", "analyze data"
+    ]
+  }
+}

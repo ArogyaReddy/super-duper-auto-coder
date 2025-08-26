@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "generatedAt": "2025-08-06T05:07:36.738Z",
+    "purpose": "SBS_Automation actions registry",
+    "version": "1.0"
+  },
+  "commonActions": [
+    {
+      "name": "navigate",
+      "type": "navigation",
+      "domains": [
+        "billing",
+        "payroll",
+        "company",
+        "people"
+      ],
+      "pattern": "navigateTo{Domain}Page",
+      "description": "Navigate to specific domain page"
+    },
+    {
+      "name": "click",
+      "type": "interaction",
+      "domains": [
+        "all"
+      ],
+      "pattern": "click{Element}",
+      "description": "Click on page element"
+    },
+    {
+      "name": "verify",
+      "type": "verification",
+      "domains": [
+        "all"
+      ],
+      "pattern": "is{Element}Displayed",
+      "description": "Verify element is displayed"
+    },
+    {
+      "name": "fillForm",
+      "type": "input",
+      "domains": [
+        "all"
+      ],
+      "pattern": "fill{Form}WithData",
+      "description": "Fill form with test data"
+    }
+  ]
+}

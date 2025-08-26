@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Test Results - {{testType}} - {{environment}}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { background: #f0f0f0; padding: 20px; border-radius: 5px; }
+        .summary { margin: 20px 0; }
+        .pass { color: green; }
+        .fail { color: red; }
+        .skip { color: orange; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Test Results: {{testType}} - {{environment}}</h1>
+        <p><strong>Executed:</strong> {{timestamp}}</p>
+        <p><strong>Status:</strong> {{reportData.status}}</p>
+    </div>
+    
+    <div class="summary">
+        <h2>Summary</h2>
+        <table>
+            <tr><th>Metric</th><th>Count</th></tr>
+            <tr><td>Total Tests</td><td>{{summary.total}}</td></tr>
+            <tr><td class="pass">Passed</td><td>{{summary.passed}}</td></tr>
+            <tr><td class="fail">Failed</td><td>{{summary.failed}}</td></tr>
+            <tr><td class="skip">Skipped</td><td>{{summary.skipped}}</td></tr>
+        </table>
+    </div>
+    
+    {{#if reportData.failedTests}}
+    <div class="failures">
+        <h2>Failed Tests</h2>
+        <ul>
+        {{#each reportData.failedTests}}
+            <li>{{this.name}} - {{this.error}}</li>
+        {{/each}}
+        </ul>
+    </div>
+    {{/if}}
+</body>
+</html>
+        
