@@ -601,7 +601,7 @@ class BDDTemplateGeneratorCriticalFix {
         const pageFileName = `${this.sanitizeFileName(parsedTemplate.fileName)}-page`;
         const instanceVarName = this.toCamelCase(parsedTemplate.fileName) + 'Page';
         
-        // CRITICAL FIX: Follow main SBS_Automation pattern - NO 'And' import
+        // SBS_Automation compliant imports - NO 'And'
         let stepsContent = `const { Given, When, Then } = require('@cucumber/cucumber');\n`;
         stepsContent += `const { assert } = require('chai');\n`;
         stepsContent += `const ${className} = require('../pages/${pageFileName}');\n\n`;
@@ -615,7 +615,7 @@ class BDDTemplateGeneratorCriticalFix {
             const stepText = step.text || step.step || '';
             const methodName = this.generateStepMethodName(stepText);
             
-            stepsContent += this.generateStepImplementation(stepType, stepText, methodName, instanceVarName, className);
+            stepsContent += this.generateSBSCompliantStepImplementation(stepType, stepText, methodName, instanceVarName, className);
         });
         
         return stepsContent;
@@ -624,17 +624,17 @@ class BDDTemplateGeneratorCriticalFix {
     buildPageContentImproved(stepsData, parsedTemplate) {
         const className = this.toPascalCase(parsedTemplate.fileName) + 'Page';
         
-        // CRITICAL FIX: Correct import paths for auto-coder/SBS_Automation location
-        let pageContent = `const By = require('../../../SBS_Automation/support/By.js');\n`;
-        pageContent += `const BasePage = require('../../../SBS_Automation/pages/common/base-page');\n\n`;
+        // FIXED: Correct import paths for SBS_Automation in auto-coder location
+        let pageContent = `const By = require('../support/By.js');\n`;
+        pageContent += `const BasePage = require('./common/base-page');\n\n`;
         
-        // Generate realistic locators based on context
-        const contextualLocators = this.generateContextualLocators(parsedTemplate);
-        pageContent += `// Page locators\n`;
+        // Generate contextual locators based on feature content
+        const contextualLocators = this.generateSBSCompliantLocators(parsedTemplate);
+        pageContent += `//#region Elements\n`;
         contextualLocators.forEach(locator => {
             pageContent += `${locator}\n`;
         });
-        pageContent += `\n`;
+        pageContent += `//#endregion\n\n`;
         
         pageContent += `class ${className} extends BasePage {\n`;
         pageContent += `  constructor(page) {\n`;
@@ -642,35 +642,15 @@ class BDDTemplateGeneratorCriticalFix {
         pageContent += `    this.page = page;\n`;
         pageContent += `  }\n\n`;
         
-        // Generate realistic methods based on steps and main SBS_Automation patterns
+        // Generate meaningful methods using BasePage capabilities
         const methods = this.extractPageMethodsFromSteps(stepsData.content);
         
         for (const method of methods) {
-            const context = {
-                methodName: method.name,
-                stepText: method.description,
-                pageTitle: parsedTemplate.title,
-                featureTitle: parsedTemplate.title
-            };
-            
-            const realisticMethod = this.pageMethodReplicator.generateRealisticMethod(context);
             const methodName = this.generateProperMethodName(method.name);
-            
             pageContent += `  async ${methodName}() {\n`;
-            
-            if (realisticMethod.body.includes('TODO')) {
-                // Use the realistic implementation
-                pageContent += `    ${realisticMethod.body.replace(/\n/g, '\n    ')}\n`;
-            } else {
-                // Fallback to context-specific implementation
-                pageContent += this.generateContextSpecificMethod(methodName, parsedTemplate);
-            }
-            
+            pageContent += this.generateSBSCompliantMethod(methodName, parsedTemplate);
             pageContent += `  }\n\n`;
         }
-        
-        // Add only essential utility methods (no generic waitForPageLoad in every method)
-        pageContent += this.generateUtilityMethods(className, parsedTemplate);
         
         pageContent += `}\n\n`;
         pageContent += `module.exports = ${className};\n`;
@@ -678,89 +658,122 @@ class BDDTemplateGeneratorCriticalFix {
         return pageContent;
     }
 
-    generateContextualLocators(parsedTemplate) {
+    generateSBSCompliantLocators(parsedTemplate) {
         const locators = [];
         const title = parsedTemplate.title.toLowerCase();
+        const content = parsedTemplate.content ? parsedTemplate.content.toLowerCase() : '';
         
-        // Generate locators based on feature context
-        if (title.includes('cashflow') || title.includes('financial')) {
-            locators.push(`const CASHFLOW_MENU = By.xpath("//span[contains(text(),'CashFlow Central')]");`);
-            locators.push(`const LEARN_MORE_BUTTON = By.xpath("//button[contains(text(),'Learn More')]");`);
-            locators.push(`const GET_STARTED_BUTTON = By.xpath("//button[contains(text(),'Get Started')]");`);
-            locators.push(`const PROMO_PAGE_CONTENT = By.xpath("//div[@data-test-id='cashflow-promo-content']");`);
-        } else if (title.includes('contractor') || title.includes('driver') || title.includes('license')) {
-            locators.push(`const UPLOAD_AREA = By.xpath("//div[@data-test-id='upload-area']");`);
-            locators.push(`const FILE_INPUT = By.css("input[type='file']");`);
-            locators.push(`const SUBMIT_BUTTON = By.xpath("//button[contains(text(),'Submit')]");`);
-            locators.push(`const SUCCESS_MESSAGE = By.xpath("//div[@data-test-id='success-message']");`);
-            locators.push(`const ERROR_MESSAGE = By.xpath("//div[@data-test-id='error-message']");`);
-        } else if (title.includes('employee') || title.includes('payroll')) {
-            locators.push(`const EMPLOYEE_TABLE = By.xpath("//table[@data-test-id='employee-table']");`);
-            locators.push(`const ADD_EMPLOYEE_BUTTON = By.xpath("//button[contains(text(),'Add Employee')]");`);
-            locators.push(`const SEARCH_INPUT = By.css("input[data-test-id='search']");`);
+        // Extract meaningful locators from feature content
+        if (title.includes('cashflow') || title.includes('cfc') || content.includes('cashflow')) {
+            locators.push(`const CASHFLOW_CENTRAL_MENU = By.xpath(\`//div[text()='CashFlow Central']\`);`);
+            locators.push(`const LEFT_NAV_MENU = By.xpath(\`//div[contains(@class, 'left-nav')]//div[text()='CashFlow Central']\`);`);
+            locators.push(`const CASHFLOW_PROMO_PAGE_HEADER = By.xpath(\`//h1[contains(text(), 'CashFlow Central')] | //h2[contains(text(), 'CashFlow Central')]\`);`);
+            locators.push(`const LEARN_MORE_BUTTON = By.xpath(\`//button[contains(text(), 'Learn More')] | //a[contains(text(), 'Learn More')]\`);`);
+            locators.push(`const IPM_CONTENT = By.xpath(\`//div[contains(@class, 'ipm')] | //section[contains(@class, 'content')]\`);`);
+            locators.push(`const GET_STARTED_BUTTON = By.xpath(\`//button[contains(text(), 'Get Started')] | //a[contains(text(), 'Get Started')]\`);`);
+            locators.push(`const PAYROLL_SECTION = By.xpath(\`//div[contains(text(), 'Payroll')] | //section[contains(@class, 'payroll')]\`);`);
+        } else if (title.includes('employee') || title.includes('payroll') || content.includes('employee')) {
+            locators.push(`const EMPLOYEE_TABLE = By.xpath(\`//table[@data-test-id='employee-table']\`);`);
+            locators.push(`const ADD_EMPLOYEE_BUTTON = By.xpath(\`//button[contains(text(), 'Add Employee')]\`);`);
+            locators.push(`const SEARCH_INPUT = By.css(\`input[data-test-id='search']\`);`);
             locators.push(`const EMPLOYEE_ROW = (name) => By.xpath(\`//tr[contains(., '\${name}')]\`);`);
+        } else if (title.includes('upload') || title.includes('file') || content.includes('upload')) {
+            locators.push(`const UPLOAD_AREA = By.xpath(\`//div[@data-test-id='upload-area']\`);`);
+            locators.push(`const FILE_INPUT = By.css(\`input[type='file']\`);`);
+            locators.push(`const SUBMIT_BUTTON = By.xpath(\`//button[contains(text(), 'Submit')]\`);`);
+            locators.push(`const SUCCESS_MESSAGE = By.xpath(\`//div[@data-test-id='success-message']\`);`);
         } else {
-            // Generic locators
-            locators.push(`const PAGE_HEADER = By.xpath("//h1 | //h2");`);
-            locators.push(`const MAIN_BUTTON = By.xpath("//button[@data-test-id='main-action']");`);
-            locators.push(`const CONTENT_AREA = By.xpath("//div[@data-test-id='content']");`);
+            // Generate basic page locators
+            locators.push(`const PAGE_HEADER = By.xpath(\`//h1 | //h2\`);`);
+            locators.push(`const MAIN_CONTENT = By.xpath(\`//main | //div[contains(@class, 'content')]\`);`);
+            locators.push(`const PRIMARY_BUTTON = By.xpath(\`//button[@data-test-id='primary-action']\`);`);
         }
         
         return locators;
     }
 
-    generateContextSpecificMethod(methodName, parsedTemplate) {
+    generateSBSCompliantMethod(methodName, parsedTemplate) {
         const name = methodName.toLowerCase();
         const title = parsedTemplate.title.toLowerCase();
         let implementation = '';
         
-        if (name.includes('click') && (name.includes('cashflow') || title.includes('cashflow'))) {
-            implementation = `    await this.clickElement(CASHFLOW_MENU);\n`;
-        } else if (name.includes('click') && name.includes('learn')) {
-            implementation = `    await this.clickElement(LEARN_MORE_BUTTON);\n`;
-        } else if (name.includes('upload') || name.includes('file')) {
-            implementation = `    await this.page.setInputFiles(FILE_INPUT, filePath);\n    await this.clickElement(SUBMIT_BUTTON);\n`;
-        } else if (name.includes('verify') || name.includes('check') || name.includes('see')) {
-            implementation = `    return await this.isVisible(CONTENT_AREA);\n`;
-        } else if (name.includes('navigate') || name.includes('goto')) {
-            implementation = `    await this.page.goto(url);\n    await this.waitForPageLoad();\n`;
-        } else if (name.includes('search')) {
-            implementation = `    await this.fill(SEARCH_INPUT, searchTerm);\n    await this.page.keyboard.press('Enter');\n`;
-        } else if (name.includes('switch') && (name.includes('contractor') || name.includes('employee'))) {
-            implementation = `    await this.clickElement(EMPLOYEE_ROW(employeeName));\n    // TODO: Implement switch logic\n`;
+        // Generate SBS-compliant method implementations
+        if (name.includes('alexisloggedinto') || name.includes('loggedinto')) {
+            implementation = `    await this.waitForPageToLoad(30);\n`;
+            implementation += `    const isLoggedIn = await this.isVisible(PAGE_HEADER);\n`;
+            implementation += `    if (!isLoggedIn) {\n`;
+            implementation += `      throw new Error('User is not properly logged in');\n`;
+            implementation += `    }\n`;
+        } else if (name.includes('alexverifies') || name.includes('payrollsection')) {
+            implementation = `    await this.waitForSelector(PAYROLL_SECTION, 15);\n`;
+            implementation += `    const isVisible = await this.isVisible(PAYROLL_SECTION);\n`;
+            implementation += `    if (!isVisible) {\n`;
+            implementation += `      throw new Error('Payroll section is not displayed');\n`;
+            implementation += `    }\n`;
+            implementation += `    return isVisible;\n`;
+        } else if (name.includes('clickcashflow') || name.includes('cashflowmenu')) {
+            implementation = `    await this.waitForSelector(CASHFLOW_CENTRAL_MENU, 20);\n`;
+            implementation += `    await this.clickElement(CASHFLOW_CENTRAL_MENU);\n`;
+            implementation += `    await this.waitForPageToLoad(15);\n`;
+        } else if (name.includes('promopageisloaded') || name.includes('cashflowcentral')) {
+            implementation = `    await this.waitForPageToLoad(20);\n`;
+            implementation += `    const isLoaded = await this.isVisible(CASHFLOW_PROMO_PAGE_HEADER);\n`;
+            implementation += `    if (!isLoaded) {\n`;
+            implementation += `      throw new Error('CashFlow Central promo page did not load');\n`;
+            implementation += `    }\n`;
+            implementation += `    return isLoaded;\n`;
+        } else if (name.includes('clicklearnmore') && name.includes('ipmcontent')) {
+            implementation = `    await this.waitForSelector(LEARN_MORE_BUTTON, 15);\n`;
+            implementation += `    await this.clickElement(LEARN_MORE_BUTTON);\n`;
+            implementation += `    await this.waitForPageToLoad(15);\n`;
+            implementation += `    await this.waitForSelector(IPM_CONTENT, 20);\n`;
+            implementation += `    const isVisible = await this.isVisible(IPM_CONTENT);\n`;
+            implementation += `    if (!isVisible) {\n`;
+            implementation += `      throw new Error('IPM content is not visible');\n`;
+            implementation += `    }\n`;
+            implementation += `    return isVisible;\n`;
+        } else if (name.includes('clicklearnmore') || name.includes('learnmore')) {
+            implementation = `    await this.waitForSelector(LEARN_MORE_BUTTON, 15);\n`;
+            implementation += `    await this.clickElement(LEARN_MORE_BUTTON);\n`;
+            implementation += `    await this.waitForPageToLoad(15);\n`;
+        } else if (name.includes('seeipmcontent') || name.includes('ipmcontent')) {
+            implementation = `    await this.waitForSelector(IPM_CONTENT, 20);\n`;
+            implementation += `    const isVisible = await this.isVisible(IPM_CONTENT);\n`;
+            implementation += `    if (!isVisible) {\n`;
+            implementation += `      throw new Error('IPM content is not visible');\n`;
+            implementation += `    }\n`;
+            implementation += `    return isVisible;\n`;
+        } else if (name.includes('getstarted') || name.includes('button')) {
+            implementation = `    await this.waitForSelector(GET_STARTED_BUTTON, 15);\n`;
+            implementation += `    const isVisible = await this.isVisible(GET_STARTED_BUTTON);\n`;
+            implementation += `    if (!isVisible) {\n`;
+            implementation += `      throw new Error('Get Started button is not visible');\n`;
+            implementation += `    }\n`;
+            implementation += `    return isVisible;\n`;
+        } else if (name.includes('navigate') || name.includes('promopag')) {
+            implementation = `    const isOnPage = await this.isVisible(CASHFLOW_PROMO_PAGE_HEADER);\n`;
+            implementation += `    if (!isOnPage) {\n`;
+            implementation += `      await this.clickElement(CASHFLOW_CENTRAL_MENU);\n`;
+            implementation += `      await this.waitForPageToLoad(15);\n`;
+            implementation += `    }\n`;
+            implementation += `    await this.waitForSelector(CASHFLOW_PROMO_PAGE_HEADER, 10);\n`;
         } else {
-            implementation = `    // TODO: Implement ${methodName}\n    await this.waitForPageLoad();\n`;
+            // Generic implementation using BasePage methods
+            implementation = `    await this.waitForPageToLoad(15);\n`;
+            implementation += `    const isReady = await this.isVisible(PAGE_HEADER);\n`;
+            implementation += `    if (!isReady) {\n`;
+            implementation += `      throw new Error('Page is not ready');\n`;
+            implementation += `    }\n`;
         }
         
         return implementation;
     }
 
     generateUtilityMethods(className, parsedTemplate) {
-        const title = parsedTemplate.title.toLowerCase();
+        // Remove generic utility methods - let each method be specific
+        // Only add essential page verification
         let methods = '';
         
-        if (title.includes('cashflow') || title.includes('promo')) {
-            methods += `  async waitForPromoPageLoad() {\n`;
-            methods += `    await this.waitForPageLoad();\n`;
-            methods += `    await this.page.waitForSelector(PROMO_PAGE_CONTENT, { timeout: 10000 });\n`;
-            methods += `  }\n\n`;
-            
-            methods += `  async isPromoPageDisplayed() {\n`;
-            methods += `    return await this.isVisible(PROMO_PAGE_CONTENT);\n`;
-            methods += `  }\n\n`;
-        } else if (title.includes('upload') || title.includes('file')) {
-            methods += `  async waitForUploadComplete() {\n`;
-            methods += `    await this.waitForSelector(SUCCESS_MESSAGE, { timeout: 30000 });\n`;
-            methods += `  }\n\n`;
-            
-            methods += `  async getUploadStatus() {\n`;
-            methods += `    const success = await this.isVisible(SUCCESS_MESSAGE);\n`;
-            methods += `    const error = await this.isVisible(ERROR_MESSAGE);\n`;
-            methods += `    return { success, error };\n`;
-            methods += `  }\n\n`;
-        }
-        
-        // Always include a basic verification method
         methods += `  async verifyPageLoaded() {\n`;
         methods += `    return await this.isVisible(PAGE_HEADER);\n`;
         methods += `  }\n\n`;
@@ -836,10 +849,26 @@ class BDDTemplateGeneratorCriticalFix {
             .join('');
     }
 
-    generateStepImplementation(stepType, stepText, methodName, instanceVarName, className) {
-        // CRITICAL FIX: Convert 'And' to 'Then' to match main SBS_Automation pattern
+    generateSBSCompliantStepImplementation(stepType, stepText, methodName, instanceVarName, className) {
+        // Convert 'And' to 'Then' to match SBS_Automation pattern
         const actualStepType = stepType === 'And' ? 'Then' : stepType;
-        return `${actualStepType}('${stepText}', async function () {\n  ${instanceVarName} = new ${className}(this.page);\n  await ${instanceVarName}.${methodName}();\n});\n\n`;
+        
+        let stepImpl = `${actualStepType}('${stepText}', async function () {\n`;
+        
+        // SBS pattern: Initialize page object if not exists, no if-else
+        stepImpl += `  ${instanceVarName} = ${instanceVarName} || new ${className}(this.page);\n`;
+        
+        // Add assertion for Then/And steps that check conditions
+        if (actualStepType === 'Then' && (stepText.toLowerCase().includes('should') || stepText.toLowerCase().includes('verify') || stepText.toLowerCase().includes('see'))) {
+            stepImpl += `  const result = await ${instanceVarName}.${methodName}();\n`;
+            stepImpl += `  assert.isTrue(result, '${stepText.replace(/'/g, "\\'")} should be true');\n`;
+        } else {
+            stepImpl += `  await ${instanceVarName}.${methodName}();\n`;
+        }
+        
+        stepImpl += `});\n\n`;
+        
+        return stepImpl;
     }
 
     generateMethodDescription(methodName) {
