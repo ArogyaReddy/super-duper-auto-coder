@@ -1,41 +1,37 @@
 {
-  "timestamp": "2025-07-22T15:58:47.906Z",
-  "platform": "win32",
+  "timestamp": "2025-08-27T00:10:46.105Z",
+  "platform": "darwin",
   "framework": {
     "version": "1.0.0",
     "structure": {
-      "guides": "✅",
-      "guides/prompts": "✅",
+      "guides": "❌",
+      "guides/prompts": "❌",
       "SBS_Automation": "✅",
       "requirements": "✅",
       "src": "✅",
       "bin": "✅"
     },
-    "lastModified": "2025-07-22T14:53:13.376Z"
+    "lastModified": "unknown"
   },
   "git": {
-    "status": "D CLEANUP-COMPLETE.md\n D CROSS-PLATFORM-GUIDE.md\n D NO-PROMPT-SOLUTION-COMPLETE.md\n D SBS_Automation/summary/jira-story-employee-employee-summary.json\n D SBS_Automation/summary/jira-story-general-item-summary.json\n D SBS_Automation/summary/jira-story-payroll-user-summary.json\n M SBS_Automation/summary/users-gadea-summary.json\n D SYNC-ISSUE-RESOLVED.md\n D TESTING-COMMANDS.md\n M bin/auto-coder.js\n D cli.js\n D framework-status.json\n M guides/CLEANUP-COMPLETE.md\n M guides/prompts/AUTO-CODER-MASTER-PROMPT.md\n M guides/prompts/generate-test-artifacts.prompt.md\n M guides/prompts/run-test-artifacts.prompt.md\n M package.json\n M prompt.md\n M src/interactive-cli.js\n D test-cross-platform.js\n D test-integration.js\n D test-priority1-artifacts.js\n D validate-final-quality.js\n D validate-priority1-quality.js\n?? SBS_Automation/data/\n?? SBS_Automation/index.js\n?? SBS_Automation/mobile.config.json\n?? SBS_Automation/summary/cfc-api-test-summary.json\n?? SBS_Automation/summary/jira-story-rs-end-point-summary.json\n?? SBS_Automation/summary/login-feature-summary.json\n?? SBS_Automation/summary/onboarding-opp-summary.json\n?? SBS_Automation/summary/user-registration-summary.json\n?? SBS_Automation/support/\n?? SBS_Automation/web.config.json\n?? config/framework-status.json\n?? generated/features/cfc-api-test.feature\n?? generated/features/jira-story-rs-end-point.feature\n?? generated/features/login-feature.feature\n?? generated/features/onboarding-opp.feature\n?? generated/features/user-registration.feature\n?? generated/pages/cfc-api-test-page.js\n?? generated/pages/jira-story-rs-end-point-page.js\n?? generated/pages/login-feature-page.js\n?? generated/pages/onboarding-opp-page.js\n?? generated/pages/user-registration-page.js\n?? generated/steps/cfc-api-test-steps.js\n?? generated/steps/jira-story-rs-end-point-steps.js\n?? generated/steps/login-feature-steps.js\n?? generated/steps/onboarding-opp-steps.js\n?? generated/steps/user-registration-steps.js\n?? guides/CROSS-PLATFORM-GUIDE.md\n?? guides/FRAMEWORK-ORGANIZATION-RULES.md\n?? guides/NO-PROMPT-SOLUTION-COMPLETE.md\n?? guides/SBS-AUTOMATION-INTEGRATION-COMPLETE.md\n?? guides/SBS-INTEGRATION-MISSION-COMPLETE.md\n?? guides/SYNC-ISSUE-RESOLVED.md\n?? guides/TESTING-COMMANDS.md\n?? guides/prompt.md\n?? input/\n?? knowledge-base/docs/SBS-Config_Matching.md\n?? requirements/curl/user-management-api.txt\n?? requirements/text/shopping-cart.md\n?? requirements/text/user-registration.txt\n?? scripts/cleanup-generated-artifacts.js\n?? scripts/cli.js\n?? scripts/deploy-to-sbs.js\n?? scripts/environment-manager.js\n?? scripts/organize-framework-structure.js\n?? scripts/test-cross-platform.js\n?? scripts/test-integration.js\n?? scripts/test-priority1-artifacts.js\n?? scripts/validate-final-quality.js\n?? scripts/validate-framework-structure.js\n?? scripts/validate-priority1-quality.js\n?? src/adapters/api-curl-adapter.js\n?? src/adapters/input-type-manager.js\n?? src/adapters/playwright-codegen-adapter.js\n?? temp/\n?? test-output/",
+    "status": "D .auto-coder/analytics.json\n D .github/TestArtifactsGeneration.prompt.md\n D .github/auto-coder-sbs-integration.prompt.md\n D .github/execute-test-artifacts.prompt.md\n D .github/fix-auto-coder-framework.prompt.md\n D .github/framework-standards-implementation.prompt.md\n D .github/generate-test-artifacts.prompt.md\n D .github/prompts/generate-test-artifacts.prompt.md\n D .github/prompts/run-test-artifacts.prompt.md\n D .github/sbs-automation-compatibility.prompt.md\n D .github/sbs-framework-patterns.prompt.md\n D AR.md\n D ENHANCED-LOCATORS-GUIDE.md\n D You-Me-Direct-BACKUP-COMPREHENSIVE.md\n D You-Me-Direct-Playwright-Enhanced-BACKUP.md\n D archive/old-prompts/You-Me-Direct-Playwright-Enhanced.md\n D archive/old-prompts/You-Me-Direct.md\n M cleanup-framework.sh\n D corrected-test-page-example.js\n D docs/ADVANCED-LOCATOR-SOLUTION.md\n D docs/AUTO-LOCATOR-SOLUTION.md\n D docs/PAGE-TEMPLATES-GUIDE.md\n D enhanced-test-page-example.js\n M framework-status.json\n D guides/EXECUTE-ARTIFACTS-PROMPT.md\n D guides/GENERATE-ARTIFACTS-PROMPT.md\n D guides/MASTER-GUIDE-CONSOLIDATED.md\n D guides/prompts/README.md\n D home-page-example.js\n D knowledge-base/BILLING-INVOICES-ARTIFACTS-QUALITY-REPORT.md\n D knowledge-base/ENHANCED-PROMPT-DEMONSTRATION-SUCCESS.md\n D knowledge-base/ROOT-CAUSE-SOLUTION-AMBIGUOUS-STEPS.md\n D knowledge-base/SBS-ENHANCED-REGISTRY-ANALYSIS-REPORT.md\n D knowledge-base/patterns/features.json\n D knowledge-base/patterns/pages.json\n D knowledge-base/patterns/steps.json\n D knowledge-base/registries/sbs-actions-registry.json\n D knowledge-base/registries/sbs-features-registry.json\n D knowledge-base/registries/sbs-locators-registry.json\n D knowledge-base/registries/sbs-master-index.json\n D knowledge-base/registries/sbs-page-objects-registry.json\n D knowledge-base/registries/sbs-step-definitions-registry.json\n D knowledge-base/sbs-enhanced-analysis-report.json\n D knowledge-base/sbs-features-enhanced-registry.json\n D knowledge-base/sbs-master-enhanced-registry.json\n D knowledge-base/sbs-master-registries/SBS-CONFLICT-ANALYSIS-REPORT.md\n D knowledge-base/sbs-master-registries/auto-coder-registry-config.json\n D knowledge-base/sbs-master-registries/sbs-actions-master-registry.json\n D knowledge-base/sbs-master-registries/sbs-complete-master-registry.json\n D knowledge-base/sbs-master-registries/sbs-features-master-registry.json\n D knowledge-base/sbs-master-registries/sbs-locators-master-registry.json\n D knowledge-base/sbs-master-registries/sbs-pages-master-registry.json\n D knowledge-base/sbs-master-registries/sbs-steps-master-registry.json\n D knowledge-base/sbs-pages-enhanced-registry.json\n D knowledge-base/sbs-pages-inventory.json\n D knowledge-base/sbs-registries/sbs-actions-registry.json\n D knowledge-base/sbs-registries/sbs-actions-registry.xml\n D knowledge-base/sbs-registries/sbs-features-registry.json\n D knowledge-base/sbs-registries/sbs-features-registry.xml\n D knowledge-base/sbs-registries/sbs-locators-registry.json\n D knowledge-base/sbs-registries/sbs-locators-registry.xml\n D knowledge-base/sbs-registries/sbs-master-index.json\n D knowledge-base/sbs-registries/sbs-master-index.xml\n D knowledge-base/sbs-registries/sbs-pages-registry.json\n D knowledge-base/sbs-registries/sbs-pages-registry.xml\n D knowledge-base/sbs-registries/sbs-steps-registry.json\n D knowledge-base/sbs-registries/sbs-steps-registry.xml\n D knowledge-base/sbs-steps-enhanced-registry.json\n D knowledge-base/sbs-steps-registry.json\n D knowledge-base/vocabulary.json\n D knowledge-base/vocabulary/actions.json\n D knowledge-base/vocabulary/entities.json\n D knowledge-base/vocabulary/roles.json\n D my-page-example.js\n D my-page1-example.js\n D new-session/CLAUDE-QUICK-START.md\n D new-session/CONTEXT-PRESERVATION-STRATEGY.md\n D new-session/FIXES-APPLIED-CURRENT-SESSION.md\n D new-session/FRAMEWORK-QUICK-REF.md\n D new-session/IMPLEMENTATION-COMPLETE.md\n D new-session/QUICK-RESTORE-CHECKLIST.md\n D new-session/README.md\n D new-session/SBS-AUTOMATION-PATTERNS.md\n D new-session/SESSION-CHANGELOG.md\n D new-session/SESSION-CONTEXT-SUMMARY.md\n D new-session/SESSION-CURRENT-ISSUES.md\n D new-session/SESSION-LAST-CONVERSATION.md\n D new-session/claude-context-restore.sh\n D new-session/reference-files/sample-feature.feature\n D new-session/reference-files/sample-page.js\n D new-session/reference-files/sample-requirement.txt\n D new-session/reference-files/sample-steps.js\n D new-session/session-health-check.ps1\n D new-session/session-health-check.sh\n D new-session/update-context.sh\n D sample-report.html\n D templates/base/test-base.hbs\n D templates/cucumber-bdd-steps-template.js\n D templates/cucumber-bdd-template.feature\n D templates/features/max-login.feature\n D templates/features/standard.hbs\n D templates/jest/unit-test.hbs\n D templates/jest/unit-test.meta.json\n D templates/pages/page-template.js\n D templates/pages/standard.hbs\n D templates/playwright/e2e-test.hbs\n D templates/playwright/e2e-test.meta.json\n D templates/steps/standard.hbs\n D templates/steps/steps-template.js\n D test-page-demo-example.js\n D test-page-example.js\n D themes/enterprise-comprehensive.theme.json\n D themes/minimal-clean.theme.json\n?? FRAMEWORK-BACKUP/",
     "lastCommits": [
-      "e89df10 ADD CLI ISSUES RESOLUTION SUMMARY",
-      "42eb527 FIX ALL 3 CRITICAL CLI ISSUES - Generation Working Perfectly",
-      "347a811 ADD 4 CRITICAL AREAS COMPLETION SUMMARY",
-      "aec20f5 IMPLEMENT 4 CRITICAL AREAS - Complete framework enhancement",
-      "316a08a no-promt-solution"
+      "5b45203 first commit"
     ],
-    "branch": "master"
+    "branch": "main"
   },
   "crossPlatform": {
-    "detected": "Windows",
-    "pathStyle": "Windows (\\)",
-    "shellType": "PowerShell"
+    "detected": "macOS",
+    "pathStyle": "Unix (/)",
+    "shellType": "Bash"
   },
   "artifacts": {
     "generated": {
-      "features": 3,
-      "steps": 3,
-      "pages": 3
+      "features": 1,
+      "steps": 1,
+      "pages": 1
     },
-    "requirements": 57,
-    "documentation": 45
+    "requirements": 49,
+    "documentation": 0
   }
 }

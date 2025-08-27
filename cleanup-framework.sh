@@ -1,158 +1,210 @@
 #!/bin/bash
 
 # 🎯 AUTO-CODER FRAMEWORK CLEANUP SCRIPT
-# Consolidates 200+ scattered files into clean, organized structure
+# Consolidates scattered files into clean, organized structure for production use
 
 echo "🚀 Starting Auto-Coder Framework Cleanup..."
 
 # Set base directory
-BASE_DIR="/Users/gadea/auto/auto/qa_automation/auto-coder"
+BASE_DIR="/Users/arog/auto/auto/qa_automation/auto-coder"
 cd "$BASE_DIR"
 
 # Create archive directory with timestamp
-ARCHIVE_DIR="archive/cleanup-$(date +%Y%m%d-%H%M%S)"
+ARCHIVE_DIR="FRAMEWORK-BACKUP/cleanup-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$ARCHIVE_DIR"
 
 echo "📚 Step 1: Cleaning up documentation files..."
 
-# Archive old documentation files (keeping only the 3 new consolidated files)
-find guides/ -name "*.md" \
-  -not -name "MASTER-GUIDE-CONSOLIDATED.md" \
-  -not -name "GENERATE-ARTIFACTS-PROMPT.md" \
-  -not -name "EXECUTE-ARTIFACTS-PROMPT.md" \
-  -exec mv {} "$ARCHIVE_DIR/docs/" \; 2>/dev/null
-
-# Create docs archive directory first
+# Archive old documentation files keeping only essential ones
 mkdir -p "$ARCHIVE_DIR/docs/"
+mkdir -p "$ARCHIVE_DIR/examples/"
+mkdir -p "$ARCHIVE_DIR/temp-files/"
 
 # Move specific files that are clearly outdated
 echo "📁 Moving outdated documentation..."
 
-# Move root level docs
+# Essential files to KEEP:
+# - README.md (main)
+# - TEAM-SETUP-GUIDE.md (team onboarding)
+# - .github/auto-coder-prompt.md (main AI prompt)
+# Everything else goes to backup
+
+# Move root level outdated docs
 [ -f "AR.md" ] && mv "AR.md" "$ARCHIVE_DIR/docs/"
-[ -f "ArogYYaa.md" ] && mv "ArogYYaa.md" "$ARCHIVE_DIR/docs/"
-[ -f "ReddYY.md" ] && mv "ReddYY.md" "$ARCHIVE_DIR/docs/"
-[ -f "myPrompts.md" ] && mv "myPrompts.md" "$ARCHIVE_DIR/docs/"
-[ -f "auto-coder-framework.md" ] && mv "auto-coder-framework.md" "$ARCHIVE_DIR/docs/"
+[ -f "You-Me-Direct-BACKUP-COMPREHENSIVE.md" ] && mv "You-Me-Direct-BACKUP-COMPREHENSIVE.md" "$ARCHIVE_DIR/docs/"
+[ -f "You-Me-Direct-Playwright-Enhanced-BACKUP.md" ] && mv "You-Me-Direct-Playwright-Enhanced-BACKUP.md" "$ARCHIVE_DIR/docs/"
 
-echo "🧪 Step 2: Organizing test and validation files..."
+# Move example files
+[ -f "home-page-example.js" ] && mv "home-page-example.js" "$ARCHIVE_DIR/examples/"
+[ -f "my-page-example.js" ] && mv "my-page-example.js" "$ARCHIVE_DIR/examples/"
+[ -f "my-page1-example.js" ] && mv "my-page1-example.js" "$ARCHIVE_DIR/examples/"
+[ -f "test-page-example.js" ] && mv "test-page-example.js" "$ARCHIVE_DIR/examples/"
+[ -f "test-page-demo-example.js" ] && mv "test-page-demo-example.js" "$ARCHIVE_DIR/examples/"
+[ -f "enhanced-test-page-example.js" ] && mv "enhanced-test-page-example.js" "$ARCHIVE_DIR/examples/"
+[ -f "corrected-test-page-example.js" ] && mv "corrected-test-page-example.js" "$ARCHIVE_DIR/examples/"
+[ -f "help-example.js" ] && mv "help-example.js" "$ARCHIVE_DIR/examples/"
 
-# Create framework-tests structure
-mkdir -p "framework-tests/validation"
-mkdir -p "framework-tests/generators"
-mkdir -p "framework-tests/execution"
-mkdir -p "framework-tests/archive"
+# Move sample files
+[ -f "sample-report.html" ] && mv "sample-report.html" "$ARCHIVE_DIR/temp-files/"
 
-# Move scattered test files to proper locations
-find . -name "*test*.js" -not -path "./node_modules/*" -not -path "./SBS_Automation/*" -not -path "./archive/*" \
-  -exec mv {} "framework-tests/validation/" \; 2>/dev/null
+# Move whole directories that are not essential
+[ -d "knowledge-base" ] && mv "knowledge-base" "$ARCHIVE_DIR/docs/"
+[ -d "guides" ] && mv "guides" "$ARCHIVE_DIR/docs/"
+[ -d "docs" ] && mv "docs" "$ARCHIVE_DIR/docs/"
+[ -d "archive" ] && mv "archive" "$ARCHIVE_DIR/"
+[ -d "temp" ] && mv "temp" "$ARCHIVE_DIR/temp-files/"
+[ -d "new-session" ] && mv "new-session" "$ARCHIVE_DIR/temp-files/"
 
-find . -name "*validate*.js" -not -path "./node_modules/*" -not -path "./SBS_Automation/*" -not -path "./archive/*" \
-  -exec mv {} "framework-tests/validation/" \; 2>/dev/null
+# Move excessive prompt files (keep only .github/auto-coder-prompt.md)
+find . -name "*.prompt.md" -not -path "*/.github/auto-coder-prompt.md" -exec mv {} "$ARCHIVE_DIR/docs/" \; 2>/dev/null
 
-find . -name "*demo*.js" -not -path "./node_modules/*" -not -path "./SBS_Automation/*" -not -path "./archive/*" \
-  -exec mv {} "framework-tests/generators/" \; 2>/dev/null
+echo "🧪 Step 2: Testing framework functionality..."
 
-echo "📋 Step 3: Cleaning up requirement templates..."
+# Test core framework functions before cleanup
+echo "🔍 Testing package.json scripts..."
+if npm run framework:status >/dev/null 2>&1; then
+    echo "✅ Framework status: OK"
+else
+    echo "⚠️  Framework status: Check needed"
+fi
 
-# Keep only essential requirement templates
-mkdir -p "requirements/examples"
+echo "📋 Step 3: Creating streamlined structure summary..."
 
-# Move excessive templates to archive
-find requirements/ -name "template-*.md" -exec mv {} "$ARCHIVE_DIR/requirements/" \; 2>/dev/null
-find requirements/ -name "completed" -type d -exec mv {} "$ARCHIVE_DIR/requirements/" \; 2>/dev/null
-find requirements/ -name "templates" -type d -exec mv {} "$ARCHIVE_DIR/requirements/" \; 2>/dev/null
+# Create cleanup summary that shows what we're keeping vs archiving
+cat > "FRAMEWORK-ORGANIZATION-REPORT.md" << EOF
+# 🚀 Framework Organization Report
 
-echo "🗂️ Step 4: Archive redundant configuration files..."
+## ✅ **CORE FRAMEWORK FILES (KEPT)**
 
-# Archive duplicate config files
-mkdir -p "$ARCHIVE_DIR/config"
-find . -name "*.config.json" -not -path "./node_modules/*" -not -path "./config/*" \
-  -exec cp {} "$ARCHIVE_DIR/config/" \; 2>/dev/null
+### Essential Directories:
+- \`SBS_Automation/\` - Generated test artifacts (CORE OUTPUT)
+- \`src/\` - Framework source code (CORE LOGIC)
+- \`bin/\` - Executable scripts (CORE TOOLS) 
+- \`scripts/\` - Utility scripts (CORE UTILITIES)
+- \`config/\` - Configuration files (CORE SETTINGS)
+- \`requirements/\` - Requirement templates (CORE INPUT)
+- \`support/\` - Framework support files (CORE SUPPORT)
+- \`utils/\` - Framework utilities (CORE HELPERS)
 
-echo "📊 Step 5: Generate cleanup summary..."
+### Essential Files:
+- \`package.json\` - Dependencies and scripts (REQUIRED)
+- \`README.md\` - Main documentation (TEAM GUIDE)
+- \`.github/auto-coder-prompt.md\` - **PRIMARY AI PROMPT** (TEAM USAGE)
+- \`TEAM-SETUP-GUIDE.md\` - Team onboarding guide (TEAM USAGE)
+- \`cleanup-framework.sh\` - This cleanup script
 
-# Create cleanup summary
-cat > "$ARCHIVE_DIR/CLEANUP-SUMMARY.md" << EOF
-# 🎯 AUTO-CODER CLEANUP SUMMARY
+### Essential for Team Usage:
+- \`.github/auto-coder-prompt.md\` - **MAIN PROMPT** for AI interactions
+- \`TEAM-SETUP-GUIDE.md\` - Setup instructions for new team members
+- \`package.json\` scripts - npm run commands for daily usage
 
-## 📅 Cleanup Date
-$(date)
+## 📦 **MOVED TO BACKUP (FRAMEWORK-BACKUP/)**
 
-## 📚 Files Archived
+### Documentation Archive:
+- \`knowledge-base/\` - Historical development documents
+- \`guides/\` - Multiple guide versions
+- \`docs/\` - Legacy documentation
+- \`AR.md\`, \`You-Me-Direct-*.md\` - Development notes
 
-### Documentation Files
-- Moved 90+ redundant .md files from guides/
-- Kept only 3 essential guides:
-  - MASTER-GUIDE-CONSOLIDATED.md
-  - GENERATE-ARTIFACTS-PROMPT.md  
-  - EXECUTE-ARTIFACTS-PROMPT.md
+### Development Archive:
+- \`*-example.js\` files - Code examples and demos
+- \`sample-report.html\` - Sample outputs
+- \`archive/\` - Previous archive folders
 
-### Test Files
-- Organized scattered test files into framework-tests/
-- Separated validation, generator, and execution tests
-- Archived obsolete demo and experimental files
+### Temporary Files:
+- \`temp/\` - Temporary working files
+- \`new-session/\` - Session artifacts
+- Multiple \`.prompt.md\` files - Old prompt versions
 
-### Requirements
-- Consolidated requirement templates
-- Moved duplicate templates to archive
-- Kept essential examples only
-
-### Configuration
-- Backed up duplicate config files
-- Maintained active configs in config/ directory
-
-## 📁 New Structure
+## 🎯 **STREAMLINED FRAMEWORK STRUCTURE**
 
 \`\`\`
-auto-coder/
-├── 📚 guides/                       # CLEAN - 3 files only
-│   ├── MASTER-GUIDE-CONSOLIDATED.md
-│   ├── GENERATE-ARTIFACTS-PROMPT.md
-│   └── EXECUTE-ARTIFACTS-PROMPT.md
-├── 🧪 framework-tests/              # ORGANIZED
-│   ├── validation/
-│   ├── generators/
-│   ├── execution/
-│   └── archive/
-├── 📋 requirements/                 # MINIMAL
-│   └── examples/
-├── 🏗️ SBS_Automation/               # STAGING AREA
-├── 🔧 scripts/                      # UTILITY SCRIPTS
-├── 📦 src/                          # CORE LOGIC
-└── 🗄️ archive/                      # HISTORICAL FILES
+auto-coder/                          # Clean, production-ready framework
+├── 📁 SBS_Automation/               # Generated test artifacts
+├── 📁 src/                          # Framework source code  
+├── 📁 bin/                          # Executable CLI tools
+├── 📁 scripts/                      # Utility scripts
+├── 📁 config/                       # Configuration files
+├── 📁 requirements/                 # Input templates
+├── 📁 support/                      # Framework support
+├── 📁 utils/                        # Helper utilities
+├── 📄 package.json                  # Dependencies & scripts
+├── 📄 README.md                     # Main documentation
+├── 📄 TEAM-SETUP-GUIDE.md           # Team onboarding
+├── 📁 .github/
+│   └── 📄 auto-coder-prompt.md      # **MAIN AI PROMPT**
+└── 📁 FRAMEWORK-BACKUP/             # Archived materials
+    ├── docs/                        # Documentation archive
+    ├── examples/                    # Code examples
+    └── temp-files/                  # Temporary files
 \`\`\`
 
-## 🎯 Benefits
+## 📋 **TEAM USAGE - ESSENTIAL COMMANDS**
 
-1. **Clarity**: Single source of truth documentation
-2. **Organization**: Logical file structure  
-3. **Maintainability**: Easy to find and update files
-4. **Performance**: Reduced file scanning overhead
-5. **Focus**: Essential files only in active directories
+### Daily Usage:
+\`\`\`bash
+npm start                    # Interactive CLI
+npm run generate:intelligent # Smart generation
+npm run test:generated      # Test generated artifacts
+npm run framework:status    # Check framework health
+\`\`\`
 
-## 🔄 Restoration
+### Team Setup:
+\`\`\`bash
+npm install                 # Install dependencies
+npm run team:validate      # Validate setup
+\`\`\`
 
-If needed, archived files can be restored from:
-\`archive/cleanup-$(date +%Y%m%d-%H%M%S)/\`
+## 🎯 **AI INTERACTION - SINGLE PROMPT**
+
+**File**: \`.github/auto-coder-prompt.md\`
+- ✅ Simple & strict rules
+- ✅ SBS_Automation compliance
+- ✅ Consistent quality
+- ✅ Team-shareable
+
+## 📋 **NEXT STEPS**
+
+1. ✅ Review streamlined structure
+2. ✅ Test core functionality: \`npm run framework:status\`
+3. ✅ Test generation: \`npm start\`
+4. ✅ Share with team: \`TEAM-SETUP-GUIDE.md\`
+5. ✅ Use main prompt: \`.github/auto-coder-prompt.md\`
+6. ✅ Once confirmed working: Delete FRAMEWORK-BACKUP/
+
+## � **VALIDATION CHECKLIST**
+
+- [ ] Framework starts: \`npm start\`
+- [ ] Can generate artifacts: AI prompt works
+- [ ] Tests run: \`npm run test:generated\`
+- [ ] Team can follow: \`TEAM-SETUP-GUIDE.md\`
+- [ ] AI prompt accessible: \`.github/auto-coder-prompt.md\`
 
 EOF
+echo "✅ Step 4: Final validation and summary..."
 
-echo "✅ Step 6: Final cleanup validation..."
-
-# Count files in key directories
-GUIDES_COUNT=$(find guides/ -name "*.md" | wc -l)
-TESTS_COUNT=$(find framework-tests/ -name "*.js" | wc -l)
-ARCHIVE_COUNT=$(find "$ARCHIVE_DIR" -type f | wc -l)
+# Count files before and after
+TOTAL_FILES_BEFORE=$(find . -type f | wc -l)
+BACKUP_FILES=$(find "$ARCHIVE_DIR" -type f | wc -l)
 
 echo "📊 Cleanup Results:"
-echo "   📚 Guides: $GUIDES_COUNT files (should be 3)"
-echo "   🧪 Tests: $TESTS_COUNT files organized"  
-echo "   🗄️ Archived: $ARCHIVE_COUNT files"
+echo "   📁 Files moved to backup: $BACKUP_FILES"
+echo "   📚 Essential documentation: 3 files (README.md, TEAM-SETUP-GUIDE.md, .github/auto-coder-prompt.md)"
+echo "   🎯 Streamlined for production use"
 
+echo ""
 echo "🎉 Auto-Coder Framework Cleanup Complete!"
+echo ""
+echo "📍 **ESSENTIAL FILES FOR TEAM:**"
+echo "   � Setup: TEAM-SETUP-GUIDE.md"
+echo "   � AI Prompt: .github/auto-coder-prompt.md"
+echo "   � Main docs: README.md"
+echo "   💻 Commands: package.json scripts"
+echo ""
 echo "📁 Archived files location: $ARCHIVE_DIR"
-echo "📖 Review: guides/MASTER-GUIDE-CONSOLIDATED.md"
-
-# Make script executable
-chmod +x cleanup-framework.sh
+echo "📖 Full report: FRAMEWORK-ORGANIZATION-REPORT.md"
+echo ""
+echo "🧪 **TEST THE FRAMEWORK:**"
+echo "   npm run framework:status"
+echo "   npm start"
+echo ""
