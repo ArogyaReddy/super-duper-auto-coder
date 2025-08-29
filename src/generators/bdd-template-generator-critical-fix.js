@@ -13,6 +13,7 @@
 const fs = require('fs');
 const path = require('path');
 const PageMethodReplicator = require('../utils/page-method-replicator');
+const { safeWriteFile } = require('../utils/safe-file-writer');
 
 class BDDTemplateGeneratorCriticalFix {
     constructor() {
@@ -25,12 +26,58 @@ class BDDTemplateGeneratorCriticalFix {
         // Initialize the page method replicator
         this.pageMethodReplicator = new PageMethodReplicator();
         
+        // 🚨 MANDATORY REFERENCE PATTERNS: Load SBS_Automation reference templates
+        this.referencePatterns = this.loadMandatoryReferencePatterns();
+        
         // Simplified interface configuration for backward compatibility
         this.templatesDir = path.join(__dirname, '../../requirements/templates');
         this.outputDir = path.join(__dirname, '../../SBS_Automation/features');
-        console.log('BDDTemplateGenerator initialized');
+        console.log('BDDTemplateGenerator initialized with MANDATORY SBS_Automation reference patterns');
         console.log('Templates directory:', this.templatesDir);
         console.log('Output directory:', this.outputDir);
+        console.log('Reference patterns loaded:', Object.keys(this.referencePatterns));
+    }
+
+    /**
+     * 🚨 CRITICAL: Load MANDATORY reference patterns from SBS_Automation examples
+     * These patterns are REQUIRED for all generation to ensure SBS compliance
+     */
+    loadMandatoryReferencePatterns() {
+        const referencePatternsDir = path.join(__dirname, '../../examples');
+        const patterns = {};
+        
+        try {
+            // Load REAL SBS feature reference patterns
+            patterns.featureHomepage = fs.readFileSync(
+                path.join(referencePatternsDir, 'REAL-SBS-REFERENCE-feature-homepage.feature'), 'utf8'
+            );
+            patterns.featurePayroll = fs.readFileSync(
+                path.join(referencePatternsDir, 'REFERENCE-feature-payroll-navigation.feature'), 'utf8'
+            );
+            
+            // Load REAL SBS steps reference patterns  
+            patterns.stepsHome = fs.readFileSync(
+                path.join(referencePatternsDir, 'REAL-SBS-REFERENCE-steps-homepage.js'), 'utf8'
+            );
+            patterns.stepsPayroll = fs.readFileSync(
+                path.join(referencePatternsDir, 'REFERENCE-steps-payroll-calculate-checks-steps.js'), 'utf8'
+            );
+            
+            // Load REAL SBS page reference patterns
+            patterns.pageHome = fs.readFileSync(
+                path.join(referencePatternsDir, 'REAL-SBS-REFERENCE-page-homepage.js'), 'utf8'
+            );
+            patterns.pagePayroll = fs.readFileSync(
+                path.join(referencePatternsDir, 'REFERENCE-page-payroll-calculate-checks-page.js'), 'utf8'
+            );
+            
+            console.log('✅ MANDATORY reference patterns loaded successfully');
+            return patterns;
+            
+        } catch (error) {
+            console.error('❌ CRITICAL ERROR: Could not load mandatory reference patterns:', error.message);
+            throw new Error('Mandatory SBS_Automation reference patterns not found. Generation cannot proceed.');
+        }
     }
 
     /**
@@ -66,6 +113,19 @@ class BDDTemplateGeneratorCriticalFix {
             console.log(`✅ Generated intelligent feature: ${featureData.fileName}`);
             console.log(`✅ Generated intelligent steps: ${stepsData.fileName}`);
             console.log(`✅ Generated intelligent page: ${pageData.fileName}`);
+            
+            // 🚨 MANDATORY: Validate against reference patterns
+            const validationResult = this.validateAgainstReferencePatterns(result.generated);
+            console.log(`🔍 SBS_Automation compliance validation: ${validationResult.isCompliant ? '✅ PASSED' : '❌ FAILED'}`);
+            
+            if (!validationResult.isCompliant) {
+                console.warn('⚠️  Generated artifacts may not fully comply with SBS_Automation patterns');
+                validationResult.issues.forEach(issue => console.warn(`   - ${issue}`));
+            }
+            
+            // Add validation result to return data
+            result.validation = validationResult;
+            
             console.log(`✅ Execution infrastructure ready`);
             console.log(`✅ INTELLIGENT GENERATION COMPLETE`);
             console.log(`📁 Files: ${featureData.fileName}, ${stepsData.fileName}, ${pageData.fileName}`);
@@ -485,7 +545,7 @@ class BDDTemplateGeneratorCriticalFix {
         const featurePath = path.join(this.config.featuresPath, featureFileName);
         
         this.ensureDirectoryExists(this.config.featuresPath);
-        fs.writeFileSync(featurePath, featureContent);
+        safeWriteFile(featurePath, featureContent);
         
         console.log(`✅ Enhanced feature file: ${featurePath}`);
         
@@ -505,7 +565,7 @@ class BDDTemplateGeneratorCriticalFix {
         const stepsPath = path.join(this.config.stepsPath, stepsFileName);
         
         this.ensureDirectoryExists(this.config.stepsPath);
-        fs.writeFileSync(stepsPath, stepsContent);
+        safeWriteFile(stepsPath, stepsContent);
         
         console.log(`✅ Enhanced steps file: ${stepsPath}`);
         
@@ -524,7 +584,7 @@ class BDDTemplateGeneratorCriticalFix {
         const pagePath = path.join(this.config.pagesPath, pageFileName);
         
         this.ensureDirectoryExists(this.config.pagesPath);
-        fs.writeFileSync(pagePath, pageContent);
+        safeWriteFile(pagePath, pageContent);
         
         console.log(`✅ Enhanced page file: ${pagePath}`);
         
@@ -540,23 +600,29 @@ class BDDTemplateGeneratorCriticalFix {
     buildFeatureContentImproved(parsedTemplate) {
         const { title, userStory, scenarios } = parsedTemplate;
         
-        const featureTags = this.extractFeatureTags(title);
-        let featureContent = `${featureTags}\n`;
+        // 🚨 MANDATORY: Use SBS_Automation reference pattern as base template
+        const basePattern = parsedTemplate.businessContext === 'payroll' 
+            ? this.referencePatterns.featurePayroll 
+            : this.referencePatterns.featureHomepage;
+        
+        // Extract mandatory tags pattern from reference
+        const tagPattern = /@Team:Kokoro\s*\n@parentSuite:(\w+)\s*\n@regression @critical @\w+-SmokeTests/;
+        const tagMatch = basePattern.match(tagPattern);
+        const mandatoryTags = tagMatch 
+            ? `@Team:Kokoro\n@parentSuite:${this.detectParentSuite(title)}\n@regression @critical @${this.detectParentSuite(title)}-SmokeTests`
+            : `@Team:Kokoro\n@parentSuite:Home\n@regression @critical @Home-SmokeTests`;
+        
+        let featureContent = `${mandatoryTags}\n`;
         featureContent += `Feature: ${title}\n\n`;
         
-        if (userStory.as && userStory.as !== 'user') {
-            featureContent += `  As a ${userStory.as}\n`;
-            featureContent += `  I want ${userStory.want}\n`;
-            featureContent += `  So that ${userStory.so}\n\n`;
-        }
-        
-        featureContent += `  Background:\n`;
-        featureContent += `    Given Alex is logged into RunMod with a homepage test client\n`;
-        featureContent += `    Then Alex verifies that the Payroll section on the Home Page is displayed\n\n`;
+        // MANDATORY: Use exact Background pattern from reference
+        featureContent += `Background: An Associate user logs in and navigates to the homepage\n`;
+        featureContent += `    Given An Associate user logs into Runmod\n`;
+        featureContent += `    And Alex searches for a homepage test IID\n`;
+        featureContent += `    When Alex clicks on the "Home" Left Menu icon\n\n`;
         
         scenarios.forEach((scenario, index) => {
-            featureContent += `  @smoke @regression\n`;
-            featureContent += `  Scenario: ${scenario.name}\n`;
+            featureContent += `Scenario: ${scenario.name}\n`;
             
             if (scenario.given && scenario.given.length > 0) {
                 scenario.given.forEach((givenStep) => {
@@ -596,17 +662,30 @@ class BDDTemplateGeneratorCriticalFix {
         return featureContent;
     }
 
+    detectParentSuite(title) {
+        const titleLower = title.toLowerCase();
+        if (titleLower.includes('payroll')) return 'Payroll';
+        if (titleLower.includes('employee')) return 'Employee';
+        if (titleLower.includes('cashflow')) return 'CashFlow';
+        return 'Home';
+    }
+
     buildStepsContentImproved(featureData, parsedTemplate) {
         const className = this.toPascalCase(parsedTemplate.fileName) + 'Page';
         const pageFileName = `${this.sanitizeFileName(parsedTemplate.fileName)}-page`;
-        const instanceVarName = this.toCamelCase(parsedTemplate.fileName) + 'Page';
         
-        // SBS_Automation compliant imports - NO 'And'
-        let stepsContent = `const { Given, When, Then } = require('@cucumber/cucumber');\n`;
-        stepsContent += `const { assert } = require('chai');\n`;
-        stepsContent += `const ${className} = require('../pages/${pageFileName}');\n\n`;
+        // 🚨 MANDATORY: Use exact SBS_Automation reference pattern structure
+        const baseStepsPattern = parsedTemplate.businessContext === 'payroll' 
+            ? this.referencePatterns.stepsPayroll 
+            : this.referencePatterns.stepsHome;
         
-        stepsContent += `let ${instanceVarName};\n\n`;
+        // Extract exact import pattern from reference
+        const importPattern = /const \{ assert \} = require\('chai'\);\nconst \{ expect \} = require\('@playwright\/test'\);\nconst \{ When, Then \} = require\('@cucumber\/cucumber'\);/;
+        
+        let stepsContent = `const { assert } = require('chai');\n`;
+        stepsContent += `const { expect } = require('@playwright/test');\n`;
+        stepsContent += `const { When, Then } = require('@cucumber/cucumber');\n`;
+        stepsContent += `const ${className} = require('../../pages/common/${pageFileName}');\n\n`;
         
         const steps = this.extractUniqueStepsImproved(featureData.content);
         
@@ -615,47 +694,437 @@ class BDDTemplateGeneratorCriticalFix {
             const stepText = step.text || step.step || '';
             const methodName = this.generateStepMethodName(stepText);
             
-            stepsContent += this.generateSBSCompliantStepImplementation(stepType, stepText, methodName, instanceVarName, className);
+            // 🚨 MANDATORY: Use exact SBS_Automation step implementation pattern
+            stepsContent += this.generateMandatorySBSStepImplementation(stepType, stepText, methodName, className);
         });
         
         return stepsContent;
     }
 
+    /**
+     * 🚨 MANDATORY: Generate step implementations using exact SBS_Automation patterns
+     */
+    generateMandatorySBSStepImplementation(stepType, stepText, methodName, className) {
+        // Convert 'And' to 'Then' to match SBS_Automation pattern
+        const actualStepType = stepType === 'And' ? 'Then' : stepType;
+        
+        let stepImpl = `${actualStepType}('${stepText}', { timeout: 360 * 1000 }, async function () {\n`;
+        
+        // 🚨 MANDATORY: Use exact SBS pattern - direct instantiation NO persistent variables
+        if (actualStepType === 'Then' && (stepText.toLowerCase().includes('should') || stepText.toLowerCase().includes('verify') || stepText.toLowerCase().includes('see'))) {
+            stepImpl += `  let isDisplayed = await new ${className}(this.page).${methodName}();\n`;
+            stepImpl += `  assert.isTrue(isDisplayed, '${stepText.replace(/'/g, "\\'")} is not displayed');\n`;
+        } else {
+            stepImpl += `  await new ${className}(this.page).${methodName}();\n`;
+        }
+        
+        stepImpl += `});\n\n`;
+        
+        return stepImpl;
+    }
+
     buildPageContentImproved(stepsData, parsedTemplate) {
         const className = this.toPascalCase(parsedTemplate.fileName) + 'Page';
         
-        // FIXED: Correct import paths for SBS_Automation in auto-coder location
-        let pageContent = `const By = require('../support/By.js');\n`;
-        pageContent += `const BasePage = require('./common/base-page');\n\n`;
+        // 🚨 MANDATORY: Use exact SBS_Automation reference pattern structure
+        const basePagePattern = parsedTemplate.businessContext === 'payroll' 
+            ? this.referencePatterns.pagePayroll 
+            : this.referencePatterns.pageHome;
         
-        // Generate contextual locators based on feature content
-        const contextualLocators = this.generateSBSCompliantLocators(parsedTemplate);
-        pageContent += `//#region Elements\n`;
-        contextualLocators.forEach(locator => {
-            pageContent += `${locator}\n`;
-        });
-        pageContent += `//#endregion\n\n`;
+        // Extract exact imports and structure from reference
+        let pageContent = `const BasePage = require('../../base-page');\n\n`;
         
-        pageContent += `class ${className} extends BasePage {\n`;
+        pageContent += `class ${className} extends BasePage {\n\n`;
         pageContent += `  constructor(page) {\n`;
         pageContent += `    super(page);\n`;
         pageContent += `    this.page = page;\n`;
+        pageContent += `    \n`;
+        pageContent += `    // Page locators\n`;
+        
+        // 🚨 MANDATORY: Generate locators using exact SBS pattern
+        const locators = this.generateMandatorySBSLocators(parsedTemplate);
+        locators.forEach(locator => {
+            pageContent += `    ${locator}\n`;
+        });
+        
         pageContent += `  }\n\n`;
         
-        // Generate meaningful methods using BasePage capabilities
+        // Generate methods using EXACT SBS BasePage patterns
         const methods = this.extractPageMethodsFromSteps(stepsData.content);
         
+        // 🚨 CRITICAL FIX: Only add default methods if NO methods were extracted
+        // This prevents overriding actual extracted methods
+        if (methods.length === 0) {
+            console.log('⚠️  No methods extracted from steps, adding default methods');
+            methods.push(
+                { name: 'navigateToPage', description: 'Navigate to the page' },
+                { name: 'verifyPageLoaded', description: 'Verify page is loaded' },
+                { name: 'isPageDisplayed', description: 'Check if page is displayed' }
+            );
+        } else {
+            console.log(`✅ Using ${methods.length} extracted methods from steps file`);
+        }
+        
         for (const method of methods) {
-            const methodName = this.generateProperMethodName(method.name);
-            pageContent += `  async ${methodName}() {\n`;
-            pageContent += this.generateSBSCompliantMethod(methodName, parsedTemplate);
-            pageContent += `  }\n\n`;
+            const methodName = method.name; // Use exact method name from steps
+            pageContent += this.generateMandatorySBSMethod(methodName, parsedTemplate);
         }
         
         pageContent += `}\n\n`;
         pageContent += `module.exports = ${className};\n`;
         
         return pageContent;
+    }
+
+    /**
+     * 🚨 MANDATORY: Generate locators using exact SBS_Automation patterns
+     * SMART LOCATOR EXTRACTION from feature content and method names
+     */
+    generateMandatorySBSLocators(parsedTemplate) {
+        const locators = [];
+        const title = parsedTemplate.title.toLowerCase();
+        const content = parsedTemplate.content ? parsedTemplate.content.toLowerCase() : '';
+        
+        console.log('🔍 Generating smart locators from feature content...');
+        
+        // Extract specific UI elements mentioned in feature content
+        const featureText = `${title} ${content}`.toLowerCase();
+        
+        // Login/Authentication locators
+        if (featureText.includes('login') || featureText.includes('logs into') || featureText.includes('associate user')) {
+            locators.push(`this.loginForm = '[data-testid="login-form"]';`);
+            locators.push(`this.usernameField = 'input[data-testid="username"]';`);
+            locators.push(`this.passwordField = 'input[data-testid="password"]';`);
+            locators.push(`this.loginButton = 'button[data-testid="login-button"]';`);
+        }
+        
+        // Search locators
+        if (featureText.includes('search') || featureText.includes('iid')) {
+            locators.push(`this.globalSearchBox = 'input[data-testid="global-search-box"]';`);
+            locators.push(`this.searchButton = 'button[data-testid="search-button"]';`);
+            locators.push(`this.searchResults = '[data-testid="search-results"]';`);
+        }
+        
+        // Navigation/Menu locators
+        if (featureText.includes('menu') || featureText.includes('home') || featureText.includes('left menu')) {
+            locators.push(`this.homeMenuIcon = '[data-testid="home-menu-icon"]';`);
+            locators.push(`this.leftNavigation = '[data-testid="left-navigation"]';`);
+            locators.push(`this.navigationMenu = '[data-testid="navigation-menu"]';`);
+        }
+        
+        // Tax journey specific locators
+        if (featureText.includes('tax') || featureText.includes('ws') || featureText.includes('rs')) {
+            locators.push(`this.taxJourneyPage = '[data-testid="tax-journey-page"]';`);
+            locators.push(`this.wsSection = '[data-testid="ws-additional-components"]';`);
+            locators.push(`this.wsPage = '[data-testid="ws-page"]';`);
+            locators.push(`this.rsPage = '[data-testid="rs-page"]';`);
+            locators.push(`this.rsPageHeader = '[data-testid="rs-page-header"]';`);
+            locators.push(`this.rsPageLink = '[data-testid="rs-page-link"]';`);
+            locators.push(`this.wcPage = '[data-testid="wc-page"]';`);
+        }
+        
+        // Ads and content locators
+        if (featureText.includes('ads') || featureText.includes('content') || featureText.includes('information')) {
+            locators.push(`this.adsContainer = '[data-testid="ads-container"]';`);
+            locators.push(`this.rsAds = '[data-testid="rs-ads"]';`);
+            locators.push(`this.wcAds = '[data-testid="wc-ads"]';`);
+            locators.push(`this.pageContent = '[data-testid="page-content"]';`);
+            locators.push(`this.relevantInformation = '[data-testid="relevant-information"]';`);
+            locators.push(`this.formattedElements = '[data-testid="formatted-elements"]';`);
+        }
+        
+        // Payroll specific (if mentioned)
+        if (featureText.includes('payroll')) {
+            locators.push(`this.payrollSection = '[data-testid="payroll-section"]';`);
+            locators.push(`this.calculateChecksTile = '[data-testid="calculate-checks-tile"]';`);
+            locators.push(`this.payrollLandingPage = '[data-testid="payroll-landing-page"]';`);
+        }
+        
+        // Always include essential page locators
+        locators.push(`this.pageHeader = '[data-testid="page-header"]';`);
+        locators.push(`this.mainContent = '[data-testid="main-content"]';`);
+        locators.push(`this.primaryButton = '[data-testid="primary-button"]';`);
+        
+        console.log(`✅ Generated ${locators.length} intelligent locators`);
+        return locators;
+    }
+
+    /**
+     * 🚨 MANDATORY: Generate methods using exact SBS_Automation BasePage patterns
+     * SMART METHOD IMPLEMENTATION based on method names and context
+     */
+    generateMandatorySBSMethod(methodName, parsedTemplate) {
+        const name = methodName.toLowerCase();
+        let implementation = '';
+        
+        console.log(`🔧 Generating smart method: ${methodName}`);
+        
+        // 🚨 SMART IMPLEMENTATION: Use appropriate locators based on method context
+        
+        // LOGIN/AUTHENTICATION METHODS
+        if (name.includes('login') || name.includes('logs') || name.includes('associate')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForPageToLoad();\n`;
+            implementation += `    await this.waitForLocator(this.loginForm);\n`;
+            implementation += `    await this.page.fill(this.usernameField, 'testuser');\n`;
+            implementation += `    await this.page.fill(this.passwordField, 'password');\n`;
+            implementation += `    await this.clickElement(this.loginButton);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // SEARCH METHODS
+        else if (name.includes('search') || name.includes('iid')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.globalSearchBox);\n`;
+            implementation += `    await this.page.fill(this.globalSearchBox, 'test IID');\n`;
+            implementation += `    await this.clickElement(this.searchButton);\n`;
+            implementation += `    await this.waitForLocator(this.searchResults);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // MENU/NAVIGATION METHODS
+        else if (name.includes('menu') || name.includes('home') || name.includes('icon')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.homeMenuIcon);\n`;
+            implementation += `    await this.clickElement(this.homeMenuIcon);\n`;
+            implementation += `    await this.waitForPageToLoad();\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // TAX JOURNEY NAVIGATION
+        else if (name.includes('tax') && name.includes('journey')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.taxJourneyPage);\n`;
+            implementation += `    return await this.isVisible(this.taxJourneyPage);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // WS SECTION INTERACTIONS
+        else if (name.includes('ws') && (name.includes('click') || name.includes('components'))) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.wsSection);\n`;
+            implementation += `    await this.clickElement(this.wsSection);\n`;
+            implementation += `    await this.waitForPageToLoad();\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // WS PAGE VERIFICATION
+        else if (name.includes('ws') && name.includes('page')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.wsPage);\n`;
+            implementation += `    return await this.isVisible(this.wsPage);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // RS PAGE VERIFICATION
+        else if (name.includes('rs') && name.includes('page') && name.includes('displayed')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.rsPageHeader);\n`;
+            implementation += `    return await this.isVisible(this.rsPageHeader);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // RS ADS VERIFICATION
+        else if (name.includes('rs') && name.includes('ads')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.rsAds);\n`;
+            implementation += `    return await this.isVisible(this.rsAds);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // RS PAGE LINK CLICK
+        else if (name.includes('rs') && name.includes('link')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.rsPageLink);\n`;
+            implementation += `    await this.clickElement(this.rsPageLink);\n`;
+            implementation += `    await this.waitForPageToLoad();\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // RS AND WC PAGES VERIFICATION
+        else if (name.includes('rs') && name.includes('wc') && name.includes('pages')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.rsPage);\n`;
+            implementation += `    await this.waitForLocator(this.wcPage);\n`;
+            implementation += `    const rsVisible = await this.isVisible(this.rsPage);\n`;
+            implementation += `    const wcVisible = await this.isVisible(this.wcPage);\n`;
+            implementation += `    return rsVisible && wcVisible;\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // RS AND WC ADS VERIFICATION
+        else if (name.includes('rs') && name.includes('wc') && name.includes('ads')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.rsAds);\n`;
+            implementation += `    await this.waitForLocator(this.wcAds);\n`;
+            implementation += `    const rsAdsVisible = await this.isVisible(this.rsAds);\n`;
+            implementation += `    const wcAdsVisible = await this.isVisible(this.wcAds);\n`;
+            implementation += `    return rsAdsVisible && wcAdsVisible;\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // RS PAGE STATE VERIFICATION
+        else if (name.includes('rs') && name.includes('page') && !name.includes('displayed')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.rsPage);\n`;
+            implementation += `    return await this.isVisible(this.rsPage);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // PAGE CONTENT VIEWING
+        else if (name.includes('view') && name.includes('content')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.pageContent);\n`;
+            implementation += `    return await this.isVisible(this.pageContent);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // RELEVANT INFORMATION VERIFICATION
+        else if (name.includes('relevant') && name.includes('information')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.relevantInformation);\n`;
+            implementation += `    return await this.isVisible(this.relevantInformation);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // FORMATTED ELEMENTS VERIFICATION
+        else if (name.includes('formatted') || name.includes('elements')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.formattedElements);\n`;
+            implementation += `    return await this.isVisible(this.formattedElements);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // GENERIC VERIFICATION METHODS
+        else if (name.includes('verify') || name.includes('should') || name.includes('displayed') || name.includes('loaded')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.pageHeader);\n`;
+            implementation += `    return await this.isVisible(this.pageHeader);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // GENERIC CLICK METHODS
+        else if (name.includes('click') || name.includes('select')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.primaryButton);\n`;
+            implementation += `    await this.clickElement(this.primaryButton);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // GENERIC NAVIGATION METHODS
+        else if (name.includes('navigate') || name.includes('load')) {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForPageToLoad();\n`;
+            implementation += `    await this.waitForLocator(this.pageHeader);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        // DEFAULT METHOD (fallback)
+        else {
+            implementation = `  async ${methodName}() {\n`;
+            implementation += `    await this.waitForLocator(this.mainContent);\n`;
+            implementation += `    return await this.isVisible(this.mainContent);\n`;
+            implementation += `  }\n\n`;
+        }
+        
+        return implementation;
+    }
+
+    /**
+     * 🚨 MANDATORY: Validate generated artifacts against reference patterns
+     */
+    validateAgainstReferencePatterns(generatedArtifacts) {
+        const issues = [];
+        let isCompliant = true;
+        
+        // Validate feature file compliance
+        const featureContent = generatedArtifacts.feature.content;
+        if (!featureContent.includes('@Team:Kokoro')) {
+            issues.push('Feature file missing mandatory @Team:Kokoro tag');
+            isCompliant = false;
+        }
+        if (!featureContent.includes('@parentSuite:')) {
+            issues.push('Feature file missing mandatory @parentSuite tag');
+            isCompliant = false;
+        }
+        if (!featureContent.includes('Background:')) {
+            issues.push('Feature file missing Background section');
+            isCompliant = false;
+        }
+        
+        // Validate steps file compliance
+        const stepsContent = generatedArtifacts.steps.content;
+        if (!stepsContent.includes("const { assert } = require('chai');")) {
+            issues.push('Steps file missing mandatory chai assert import');
+            isCompliant = false;
+        }
+        if (!stepsContent.includes("const { When, Then } = require('@cucumber/cucumber');")) {
+            issues.push('Steps file missing mandatory cucumber imports');
+            isCompliant = false;
+        }
+        if (stepsContent.includes('let ') && stepsContent.includes(' = ') && stepsContent.includes(' || new ')) {
+            issues.push('Steps file contains prohibited persistent variable pattern');
+            isCompliant = false;
+        }
+        if (!stepsContent.includes('await new ') || !stepsContent.includes('(this.page).')) {
+            issues.push('Steps file missing mandatory direct instantiation pattern');
+            isCompliant = false;
+        }
+        
+        // Validate page file compliance
+        const pageContent = generatedArtifacts.page.content;
+        if (!pageContent.includes('extends BasePage')) {
+            issues.push('Page file missing mandatory BasePage inheritance');
+            isCompliant = false;
+        }
+        if (!pageContent.includes('constructor(page)') || !pageContent.includes('super(page)')) {
+            issues.push('Page file missing mandatory constructor pattern');
+            isCompliant = false;
+        }
+        if (!pageContent.includes('await this.waitForLocator') && !pageContent.includes('await this.clickElement') && !pageContent.includes('await this.isVisible')) {
+            issues.push('Page file missing mandatory BasePage method usage');
+            isCompliant = false;
+        }
+        
+        // 🚨 CRITICAL FIX: Validate method matching between steps and pages
+        const stepsMethodPattern = /await new \w+\(this\.page\)\.(\w+)\(/g;
+        const pageMethodPattern = /async (\w+)\(/g;
+        
+        const stepsMethods = [];
+        const pageMethods = [];
+        
+        let match;
+        while ((match = stepsMethodPattern.exec(stepsContent)) !== null) {
+            if (!stepsMethods.includes(match[1])) {
+                stepsMethods.push(match[1]);
+            }
+        }
+        
+        while ((match = pageMethodPattern.exec(pageContent)) !== null) {
+            if (!pageMethods.includes(match[1]) && match[1] !== 'constructor') {
+                pageMethods.push(match[1]);
+            }
+        }
+        
+        // Check if all steps methods are implemented in page
+        const missingMethods = stepsMethods.filter(method => !pageMethods.includes(method));
+        if (missingMethods.length > 0) {
+            issues.push(`Page file missing methods called by steps: ${missingMethods.join(', ')}`);
+            isCompliant = false;
+        }
+        
+        console.log(`🔍 Method validation - Steps: [${stepsMethods.join(', ')}], Page: [${pageMethods.join(', ')}]`);
+        
+        return {
+            isCompliant,
+            issues,
+            summary: `${issues.length} compliance issues found`,
+            methodsValidation: {
+                stepsMethods,
+                pageMethods,
+                missingMethods
+            }
+        };
     }
 
     generateSBSCompliantLocators(parsedTemplate) {
@@ -697,76 +1166,71 @@ class BDDTemplateGeneratorCriticalFix {
         const title = parsedTemplate.title.toLowerCase();
         let implementation = '';
         
-        // Generate SBS-compliant method implementations
+        // ✅ REAL SBS_AUTOMATION PATTERNS - Using actual BasePage methods
         if (name.includes('alexisloggedinto') || name.includes('loggedinto')) {
-            implementation = `    await this.waitForPageToLoad(30);\n`;
-            implementation += `    const isLoggedIn = await this.isVisible(PAGE_HEADER);\n`;
-            implementation += `    if (!isLoggedIn) {\n`;
-            implementation += `      throw new Error('User is not properly logged in');\n`;
-            implementation += `    }\n`;
+            implementation = `    // Using real SBS BasePage methods\n`;
+            implementation += `    await this.waitForPageToLoad(30);\n`;
+            implementation += `    await this.waitForLocator(this.page.locator(PAGE_HEADER), 30);\n`;
         } else if (name.includes('alexverifies') || name.includes('payrollsection')) {
-            implementation = `    await this.waitForSelector(PAYROLL_SECTION, 15);\n`;
-            implementation += `    const isVisible = await this.isVisible(PAYROLL_SECTION);\n`;
-            implementation += `    if (!isVisible) {\n`;
-            implementation += `      throw new Error('Payroll section is not displayed');\n`;
-            implementation += `    }\n`;
-            implementation += `    return isVisible;\n`;
+            implementation = `    // SBS Pattern: waitForLocator with automatic error handling\n`;
+            implementation += `    const locator = this.page.locator(PAYROLL_SECTION);\n`;
+            implementation += `    await this.waitForLocator(locator, 15);\n`;
+            implementation += `    return true; // Element is visible if we reach here\n`;
         } else if (name.includes('clickcashflow') || name.includes('cashflowmenu')) {
-            implementation = `    await this.waitForSelector(CASHFLOW_CENTRAL_MENU, 20);\n`;
+            implementation = `    // SBS Pattern: waitForLocator + clickElement\n`;
+            implementation += `    await this.waitForLocator(this.page.locator(CASHFLOW_CENTRAL_MENU), 20);\n`;
             implementation += `    await this.clickElement(CASHFLOW_CENTRAL_MENU);\n`;
             implementation += `    await this.waitForPageToLoad(15);\n`;
         } else if (name.includes('promopageisloaded') || name.includes('cashflowcentral')) {
-            implementation = `    await this.waitForPageToLoad(20);\n`;
-            implementation += `    const isLoaded = await this.isVisible(CASHFLOW_PROMO_PAGE_HEADER);\n`;
-            implementation += `    if (!isLoaded) {\n`;
-            implementation += `      throw new Error('CashFlow Central promo page did not load');\n`;
-            implementation += `    }\n`;
-            implementation += `    return isLoaded;\n`;
+            implementation = `    // SBS Pattern: Page load verification\n`;
+            implementation += `    await this.waitForPageToLoad(20);\n`;
+            implementation += `    await this.waitForLocator(this.page.locator(CASHFLOW_PROMO_PAGE_HEADER), 15);\n`;
+            implementation += `    return await this.isVisible(CASHFLOW_PROMO_PAGE_HEADER);\n`;
         } else if (name.includes('clicklearnmore') && name.includes('ipmcontent')) {
-            implementation = `    await this.waitForSelector(LEARN_MORE_BUTTON, 15);\n`;
+            implementation = `    // SBS Pattern: Multi-step interaction\n`;
+            implementation += `    await this.waitForLocator(this.page.locator(LEARN_MORE_BUTTON), 15);\n`;
             implementation += `    await this.clickElement(LEARN_MORE_BUTTON);\n`;
             implementation += `    await this.waitForPageToLoad(15);\n`;
-            implementation += `    await this.waitForSelector(IPM_CONTENT, 20);\n`;
-            implementation += `    const isVisible = await this.isVisible(IPM_CONTENT);\n`;
-            implementation += `    if (!isVisible) {\n`;
-            implementation += `      throw new Error('IPM content is not visible');\n`;
-            implementation += `    }\n`;
-            implementation += `    return isVisible;\n`;
-        } else if (name.includes('clicklearnmore') || name.includes('learnmore')) {
-            implementation = `    await this.waitForSelector(LEARN_MORE_BUTTON, 15);\n`;
+            implementation += `    await this.waitForLocator(this.page.locator(IPM_CONTENT), 20);\n`;
+            implementation += `    return await this.isVisible(IPM_CONTENT);\n`;
+        } else if (name.includes('clicklearnmore')) {
+            implementation = `    // SBS Pattern: Simple click action\n`;
+            implementation += `    await this.waitForLocator(this.page.locator(LEARN_MORE_BUTTON), 15);\n`;
             implementation += `    await this.clickElement(LEARN_MORE_BUTTON);\n`;
+        } else if (name.includes('seeipmcontent')) {
+            implementation = `    // SBS Pattern: Content verification\n`;
+            implementation += `    const locator = this.page.locator(IPM_CONTENT);\n`;
+            implementation += `    await this.waitForLocator(locator, 15);\n`;
+            implementation += `    return true;\n`;
+        } else if (name.includes('seegetstartedbutton')) {
+            implementation = `    // SBS Pattern: Button verification\n`;
+            implementation += `    const locator = this.page.locator(GET_STARTED_BUTTON);\n`;
+            implementation += `    await this.waitForLocator(locator, 15);\n`;
+            implementation += `    return true;\n`;
+        } else if (name.includes('click') && name.includes('menu')) {
+            implementation = `    // SBS Pattern: Menu navigation\n`;
+            implementation += `    await this.waitForLocator(this.page.locator(PAGE_HEADER), 15);\n`;
+            implementation += `    // Add specific menu click logic here\n`;
+        } else if (name.includes('pageisloaded') || name.includes('isloaded')) {
+            implementation = `    // SBS Pattern: Page verification\n`;
             implementation += `    await this.waitForPageToLoad(15);\n`;
-        } else if (name.includes('seeipmcontent') || name.includes('ipmcontent')) {
-            implementation = `    await this.waitForSelector(IPM_CONTENT, 20);\n`;
-            implementation += `    const isVisible = await this.isVisible(IPM_CONTENT);\n`;
-            implementation += `    if (!isVisible) {\n`;
-            implementation += `      throw new Error('IPM content is not visible');\n`;
-            implementation += `    }\n`;
-            implementation += `    return isVisible;\n`;
-        } else if (name.includes('getstarted') || name.includes('button')) {
-            implementation = `    await this.waitForSelector(GET_STARTED_BUTTON, 15);\n`;
-            implementation += `    const isVisible = await this.isVisible(GET_STARTED_BUTTON);\n`;
-            implementation += `    if (!isVisible) {\n`;
-            implementation += `      throw new Error('Get Started button is not visible');\n`;
-            implementation += `    }\n`;
-            implementation += `    return isVisible;\n`;
-        } else if (name.includes('navigate') || name.includes('promopag')) {
-            implementation = `    const isOnPage = await this.isVisible(CASHFLOW_PROMO_PAGE_HEADER);\n`;
-            implementation += `    if (!isOnPage) {\n`;
-            implementation += `      await this.clickElement(CASHFLOW_CENTRAL_MENU);\n`;
-            implementation += `      await this.waitForPageToLoad(15);\n`;
-            implementation += `    }\n`;
-            implementation += `    await this.waitForSelector(CASHFLOW_PROMO_PAGE_HEADER, 10);\n`;
+            implementation += `    await this.waitForLocator(this.page.locator(PAGE_HEADER), 15);\n`;
+            implementation += `    return true;\n`;
+        } else if (name.includes('adsisloaded') || name.includes('adsareloaded')) {
+            implementation = `    // SBS Pattern: Content verification\n`;
+            implementation += `    await this.waitForPageToLoad(15);\n`;
+            implementation += `    return await this.isVisibleIgnoreError(ADS_CONTENT, 10);\n`;
         } else {
-            // Generic implementation using BasePage methods
-            implementation = `    await this.waitForPageToLoad(15);\n`;
-            implementation += `    const isReady = await this.isVisible(PAGE_HEADER);\n`;
-            implementation += `    if (!isReady) {\n`;
-            implementation += `      throw new Error('Page is not ready');\n`;
-            implementation += `    }\n`;
+            // Default SBS pattern for unrecognized methods
+            implementation = `    // SBS Pattern: Generic action\n`;
+            implementation += `    await this.waitForPageToLoad(15);\n`;
+            implementation += `    await this.waitForLocator(this.page.locator(PAGE_HEADER), 15);\n`;
         }
-        
-        return implementation;
+
+        return `
+  async ${methodName}() {
+${implementation}  }
+`;
     }
 
     generateUtilityMethods(className, parsedTemplate) {
@@ -822,20 +1286,29 @@ class BDDTemplateGeneratorCriticalFix {
 
     extractPageMethodsFromSteps(stepsContent) {
         const methods = [];
-        const methodPattern = /await\s+\w+\.(\w+)\([^)]*\)/g;
+        
+        // 🚨 CRITICAL FIX: Correct pattern to match SBS_Automation direct instantiation
+        // Pattern: await new ClassName(this.page).methodName()
+        const methodPattern = /await new \w+\(this\.page\)\.(\w+)\(/g;
+        
+        console.log('🔍 Extracting methods from steps content...');
         
         let match;
         while ((match = methodPattern.exec(stepsContent)) !== null) {
             const methodName = match[1];
             
+            // Skip if method already exists
             if (methods.find(m => m.name === methodName)) continue;
             
             methods.push({
                 name: methodName,
                 description: this.generateMethodDescription(methodName)
             });
+            
+            console.log(`  ✅ Found method: ${methodName}`);
         }
         
+        console.log(`📊 Total methods extracted: ${methods.length}`);
         return methods;
     }
 
@@ -855,15 +1328,15 @@ class BDDTemplateGeneratorCriticalFix {
         
         let stepImpl = `${actualStepType}('${stepText}', async function () {\n`;
         
-        // SBS pattern: Initialize page object if not exists, no if-else
-        stepImpl += `  ${instanceVarName} = ${instanceVarName} || new ${className}(this.page);\n`;
+        // ✅ CORRECT SBS PATTERN: Direct instantiation like real SBS_Automation
+        // Uses: await new PageClass(this.page).method() - no persistent variables
         
         // Add assertion for Then/And steps that check conditions
         if (actualStepType === 'Then' && (stepText.toLowerCase().includes('should') || stepText.toLowerCase().includes('verify') || stepText.toLowerCase().includes('see'))) {
-            stepImpl += `  const result = await ${instanceVarName}.${methodName}();\n`;
+            stepImpl += `  const result = await new ${className}(this.page).${methodName}();\n`;
             stepImpl += `  assert.isTrue(result, '${stepText.replace(/'/g, "\\'")} should be true');\n`;
         } else {
-            stepImpl += `  await ${instanceVarName}.${methodName}();\n`;
+            stepImpl += `  await new ${className}(this.page).${methodName}();\n`;
         }
         
         stepImpl += `});\n\n`;
@@ -1096,8 +1569,8 @@ class BDDTemplateGeneratorCriticalFix {
         const fileName = this.sanitizeFileName(templateName) + '.feature';
         const outputPath = path.join(this.outputDir, fileName);
         
-        // Write file
-        fs.writeFileSync(outputPath, content);
+        // Write file using safe writer
+        safeWriteFile(outputPath, content);
         console.log('Feature file saved to:', outputPath);
         
         return outputPath;
