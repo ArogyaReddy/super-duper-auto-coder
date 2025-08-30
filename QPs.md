@@ -218,3 +218,74 @@ Let's use it for our both AI generated and auto-coder framework generated
 
 ==========
 
+
+We are using too much of "ADP" and "SBS" words everywhere - please avoid this.our auto-coder framework is common and generic to any testing, any app, any test files to test artifacts generations.
+And for the reports, if we run more than once, the reports and report names are same and old ones will be replaced [because of same name].
+Instead can we follow a different strategy please.
+Examples :
+for excel reports : BrokenLinks_Testing_Report_YYMMDDHHMMSS[AM/PM].xlsx
+for other reports : 01_Summary_Dashboard_YYMMDDHHMMSS[AM/PM].csv
+02_All_Links_Catalog_YYMMDDHHMMSS[AM/PM].csv
+03_Menu_Navigation_YYMMDDHHMMSS[AM/PM].csv
+04_Broken_Links_Details_YYMMDDHHMMSS[AM/PM].csv
+05_Test_Results_YYMMDDHHMMSS[AM/PM].csv
+06_Recommendations_YYMMDDHHMMSS[AM/PM].csv
+
+And so on.
+So that we have all the tests and reuslts to view and compare if needed.
+
+For any of util tests/executions - if we need results and reprots to be published - please do so and use the simmilar style/pattern.
+Note : we have 10 different utilities that we did and implemeted for ultimate testing purpose.
+
+
+
+===============
+For all our wronderful utilities, in order to make these utils best at use...
+we have a much more comprehensive approach to handling different login scenarios.
+I am not sure, how you are logging into my APP [ADP]
+because there are different types of logins, different types of roles and different types of login URLs.
+Examples : 
+1. We have different environments
+2. clients will have a different login URLs for RUN, MAX, DTO, WFN and so on.
+3. internal users [service users] will have a different login URLs
+
+So, how do we solve this problem.
+
+I have a solution in mind that involves creating a universal authentication handler that can adapt to different login scenarios based on the user type and environment.
+Two different login URLs will be supported:
+1. For clients
+2. For internal users [service users]
+3. three different environments [QAFIT, IAT, PROD]
+
+So, if you read through main SBS_Automation framework, you will see that it has a well-defined structure for handling different login scenarios.
+
+Here are my thoughts and approach:
+1. Create a universal authentication handler that can adapt to different login scenarios based on the user type and environment and test data.
+2. Implement the necessary logic to switch between different login URLs for clients and internal users.
+3. Ensure that the handler can seamlessly work across the three different environments [QAFIT, IAT, PROD].
+4. Integrate this handler into our utilities to ensure consistent and reliable authentication across all testing scenarios and it should be independent of the utilities and any utility or framework-specific code can use when needed.
+
+
+To achieve this, we will follow a structured approach to implement the universal authentication handler within our existing framework.
+1. Read through main SBS_Automation framework to understand the current login handling mechanisms.
+2. Extract different user roles, environments, and login URLs from the framework.
+3. Extract relevant test data associated with each login scenario.
+4. Extract the necessary authentication logic and implement it within the universal authentication handler.
+5. Extract any utility functions or helper methods related to authentication and incorporate them into the handler.
+6. Test the universal authentication handler across different login scenarios to ensure its effectiveness and reliability.
+7. Document the implementation details and usage guidelines for the universal authentication handler to facilitate future maintenance and enhancements.
+8. We can also consider implementing logging and monitoring capabilities within the handler to track authentication attempts and identify potential issues.
+9. Finally, we will review and refactor the existing utilities to ensure they leverage the universal authentication handler for all login-related operations.
+10. Implement this within our automation framework to ensure all utilities can utilize the universal authentication handler seamlessly.
+11. Add these functional approach and usage into our auto-coder framework - interactive CLI as Utils at Best [as main options]
+12. And list all of the 10 utilities that will leverage the universal authentication handler as sub-commands in the interactive CLI.
+13. during the implementation, we should ensure to gran user type [CLIENT or SERVICE USER] so that the universal authentication handler is easily configurable and can be extended to accommodate future login scenarios and requirements.
+
+
+============
+
+/Users/arog/auto/auto/qa_automation/SBS_Automation/steps/common/client-provisioning-steps.js
+
+/Users/arog/auto/auto/qa_automation/SBS_Automation/pages/common/practitioner-login.js
+
+

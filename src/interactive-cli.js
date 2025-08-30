@@ -561,6 +561,7 @@ class InteractiveCLI {
         console.log(chalk.gray('Manage and validate the Auto-Coder framework\n'));
 
         const choices = [
+            '🎯 Universal Authentication Handler [THE BEST] 🔥',
             '✅ Validate Framework',
             '🔧 Cross-Platform Test',
             '🎯 Priority 1 Quality Test',
@@ -572,18 +573,31 @@ class InteractiveCLI {
         ];
 
         choices.forEach((choice, index) => {
-            console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
+            if (index === 0) { // Universal Authentication Handler
+                console.log(`${chalk.cyan((index + 1).toString())}. ${chalk.red.bold(choice)}`);
+            } else {
+                console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
+            }
         });
 
-        const answer = await this.getInput('\nSelect framework action (1-8): ');
+        console.log(chalk.red.bold('\n🔥 OPTION 1: UNIVERSAL AUTHENTICATION HANDLER - THE BEST'));
+        console.log(chalk.yellow('   Multi-environment, multi-user-type, multi-application authentication'));
+        console.log(chalk.gray('   ✅ QAFIT/IAT/PROD environments ✅ CLIENT/SERVICE_USER types ✅ RUN/MAX/WFN apps'));
+
+        const answer = await this.getInput('\nSelect framework action (1-9): ');
         const choice = parseInt(answer.trim());
 
-        if (choice === 8) {
+        if (choice === 9) {
             await this.showMainMenu();
             return;
         }
 
-        const actions = ['validate', 'cross-platform', 'priority1', 'integration', 'cleanup', 'status', 'hooks'];
+        if (choice === 1) {
+            await this.showUniversalAuthenticationMenu();
+            return;
+        }
+
+        const actions = ['', 'validate', 'cross-platform', 'priority1', 'integration', 'cleanup', 'status', 'hooks'];
         const action = actions[choice - 1];
         
         if (action) {
@@ -1242,6 +1256,202 @@ ${chalk.yellow('DOCUMENTATION:')}
         }
     }
 
+    async showUniversalAuthenticationMenu() {
+        console.log(chalk.red.bold('\n🎯 UNIVERSAL AUTHENTICATION HANDLER - THE BEST'));
+        console.log(chalk.yellow('   Multi-environment, multi-user-type, multi-application authentication'));
+        console.log(chalk.gray('   Comprehensive authentication solution for all testing scenarios\n'));
+
+        const choices = [
+            '🚀 Test Single Authentication (Interactive)',
+            '🔄 Batch Test Multiple Environments',
+            '🎯 Auto-Load SBS_Automation Credentials',
+            '📊 Generate Authentication Report',
+            '🧪 Demo Authentication Examples',
+            '📚 View Authentication Documentation',
+            '🔧 Configure Authentication Settings',
+            '🔙 Back to Framework Menu'
+        ];
+
+        choices.forEach((choice, index) => {
+            console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
+        });
+
+        console.log(chalk.blue.bold('\n🌍 Supported Environments:'));
+        console.log(chalk.gray('   🔹 QAFIT - QA Functional Integration Testing'));
+        console.log(chalk.gray('   🔹 IAT - Integration Acceptance Testing'));
+        console.log(chalk.gray('   🔹 PROD - Production'));
+
+        console.log(chalk.blue.bold('\n👥 Supported User Types:'));
+        console.log(chalk.gray('   🔹 CLIENT - Business clients (Username@IID format)'));
+        console.log(chalk.gray('   🔹 SERVICE_USER - Internal users (username@adp format)'));
+
+        console.log(chalk.blue.bold('\n📱 Supported Applications:'));
+        console.log(chalk.gray('   🔹 RUN - RunMod Payroll'));
+        console.log(chalk.gray('   🔹 MAX - Digital Tax Office'));
+        console.log(chalk.gray('   🔹 WFN - Workforce Now'));
+        console.log(chalk.gray('   🔹 DTO - Digital Tax Office'));
+
+        const answer = await this.getInput('\nSelect authentication option (1-8): ');
+        const choice = parseInt(answer.trim());
+
+        if (choice === 8) {
+            await this.showFrameworkMenu();
+            return;
+        }
+
+        const actions = ['single', 'batch', 'auto-load', 'report', 'demo', 'docs', 'config'];
+        const action = actions[choice - 1];
+        
+        if (action) {
+            await this.handleUniversalAuthentication(action);
+        } else {
+            console.log(chalk.red('\n❌ Invalid choice. Please try again.'));
+            await this.showUniversalAuthenticationMenu();
+        }
+    }
+
+    async handleUniversalAuthentication(action) {
+        switch (action) {
+            case 'single':
+                await this.testSingleAuthentication();
+                break;
+            case 'batch':
+                await this.testBatchAuthentication();
+                break;
+            case 'auto-load':
+                await this.testAutoLoadCredentials();
+                break;
+            case 'report':
+                await this.generateAuthReport();
+                break;
+            case 'demo':
+                await this.showAuthDemo();
+                break;
+            case 'docs':
+                await this.showAuthDocumentation();
+                break;
+            case 'config':
+                await this.configureAuthSettings();
+                break;
+        }
+
+        await this.askContinue();
+    }
+
+    async testSingleAuthentication() {
+        console.log(chalk.blue.bold('\n🚀 SINGLE AUTHENTICATION TEST'));
+        console.log(chalk.gray('Test authentication with a specific URL and credentials\n'));
+
+        // Get target URL
+        const targetUrl = await this.getInput('Enter target URL (e.g., https://online-fit.nj.adp.com/signin/v1/?APPID=RUN): ');
+        if (!targetUrl.trim()) {
+            console.log(chalk.red('❌ Target URL is required'));
+            return;
+        }
+
+        // Get credentials
+        const credentials = await this.getInput('Enter credentials (username/password or username:password): ');
+        if (!credentials.trim()) {
+            console.log(chalk.red('❌ Credentials are required'));
+            return;
+        }
+
+        console.log(chalk.yellow('\n🔍 Authentication will auto-detect:'));
+        console.log(chalk.gray('   • User type (CLIENT vs SERVICE_USER)'));
+        console.log(chalk.gray('   • Environment (QAFIT, IAT, PROD)'));
+        console.log(chalk.gray('   • Application type (RUN, MAX, WFN)'));
+        console.log(chalk.gray('   • Appropriate selectors and workflows'));
+
+        const proceed = await this.getInput('\nProceed with authentication test? (y/n): ');
+        if (proceed.toLowerCase() !== 'y') {
+            console.log(chalk.yellow('Authentication test cancelled'));
+            return;
+        }
+
+        try {
+            console.log(chalk.cyan('\n🚀 Starting authentication test...'));
+            
+            const command = `node utils/test-universal-auth.js "${targetUrl}" "${credentials}"`;
+            await this.executeCommand(command, 'Testing Universal Authentication...');
+            
+            console.log(chalk.green('\n✅ Authentication test completed!'));
+            console.log(chalk.yellow('📊 Check the console output above for detailed results'));
+            
+        } catch (error) {
+            console.log(chalk.red(`\n❌ Authentication test failed: ${error.message}`));
+            console.log(chalk.yellow('\n💡 Troubleshooting tips:'));
+            console.log(chalk.gray('   • Verify the target URL is accessible'));
+            console.log(chalk.gray('   • Check credential format (username/password)'));
+            console.log(chalk.gray('   • Ensure the application supports the detected user type'));
+        }
+    }
+
+    async generateAuthReport() {
+        console.log(chalk.blue.bold('\n📊 GENERATING AUTHENTICATION REPORT'));
+        console.log(chalk.gray('Creating comprehensive authentication configuration analysis\n'));
+        
+        try {
+            const { spawn } = require('child_process');
+            const reportScript = path.join(__dirname, '..', 'utils', 'generate-auth-report.js');
+            
+            console.log(chalk.yellow('🔄 Generating comprehensive authentication configuration report...'));
+            
+            const child = spawn('node', [reportScript], {
+                cwd: path.join(__dirname, '..'),
+                stdio: 'inherit'
+            });
+            
+            return new Promise((resolve) => {
+                child.on('close', (code) => {
+                    if (code === 0) {
+                        console.log(chalk.green('\n✅ Authentication report generated successfully!'));
+                        console.log(chalk.blue('📁 Check the reports/ directory for detailed configuration analysis.'));
+                    } else {
+                        console.log(chalk.red('\n❌ Report generation failed.'));
+                    }
+                    resolve();
+                });
+            });
+            
+        } catch (error) {
+            console.error(chalk.red('❌ Error generating report:'), error.message);
+        }
+    }
+
+    async showAuthDemo() {
+        console.log(chalk.blue.bold('\n🎯 UNIVERSAL AUTHENTICATION DEMO SUITE'));
+        console.log(chalk.gray('Live demonstration of authentication capabilities\n'));
+        
+        try {
+            const { spawn } = require('child_process');
+            const demoScript = path.join(__dirname, '..', 'utils', 'demo-auth-suite.js');
+            
+            console.log(chalk.yellow('🚀 Starting live authentication demonstration...'));
+            console.log(chalk.cyan('📺 Browser will open to show authentication capabilities in action'));
+            console.log(chalk.gray('⏱️  Demo will run for approximately 2-3 minutes\n'));
+            
+            const child = spawn('node', [demoScript], {
+                cwd: path.join(__dirname, '..'),
+                stdio: 'inherit'
+            });
+            
+            return new Promise((resolve) => {
+                child.on('close', (code) => {
+                    if (code === 0) {
+                        console.log(chalk.green('\n🎊 Authentication demo completed successfully!'));
+                        console.log(chalk.blue('� Demo report saved to reports/ directory.'));
+                    } else {
+                        console.log(chalk.red('\n❌ Demo execution failed.'));
+                    }
+                    resolve();
+                });
+            });
+            
+        } catch (error) {
+            console.error(chalk.red('❌ Error running demo:'), error.message);
+        }
+    }
+
     async askContinue() {
         const choices = [
             '🔙 Back to Main Menu',
@@ -1282,7 +1492,7 @@ ${chalk.yellow('DOCUMENTATION:')}
 
     async askContinueTemplateWizard() {
         const choices = [
-            ' Back to Main Menu',
+            '🔙 Back to Main Menu',
             '❌ Exit'
         ];
 
@@ -1326,10 +1536,6 @@ ${chalk.yellow('DOCUMENTATION:')}
                 resolve(answer);
             });
         });
-    }
-
-    close() {
-        this.rl.close();
     }
 
     async exitCLI() {
