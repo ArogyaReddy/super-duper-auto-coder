@@ -1,0 +1,144 @@
+{
+    "testEnvironment": {
+        "baseUrl": "https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c",
+        "environment": "IAT",
+        "clientIID": "23477791"
+    },
+    
+    "userRoles": {
+        "Owner": {
+            "role": "1",
+            "username": "Arogya@23477791",
+            "password": "ADPadp01$",
+            "description": "Company Owner - Full Access",
+            "permissions": ["all"],
+            "testScenarios": ["broken-links", "smoke-test", "regression"]
+        },
+        
+        "PayrollAdmin": {
+            "role": "25",
+            "username": "PayrollAdmin@23477791",
+            "password": "Test0507",
+            "description": "Payroll Administrator",
+            "permissions": ["payroll", "reports", "employee-management"],
+            "testScenarios": ["payroll-tests", "broken-links"]
+        },
+        
+        "HRAdmin": {
+            "role": "26",
+            "username": "HRAdmin@23477791",
+            "password": "Test0507",
+            "description": "HR Administrator",
+            "permissions": ["hr", "employee-management", "reports"],
+            "testScenarios": ["hr-tests", "broken-links"]
+        },
+        
+        "HR411Only": {
+            "role": "27",
+            "username": "HR411Only@23477791",
+            "password": "Test0507",
+            "description": "HR 411 Limited Access",
+            "permissions": ["hr-411"],
+            "testScenarios": ["hr-411-tests"]
+        },
+        
+        "PayrollHRAdmin": {
+            "role": "28",
+            "username": "PayrollHRAdmin@23477791",
+            "password": "Test0507",
+            "description": "Combined Payroll and HR Admin",
+            "permissions": ["payroll", "hr", "employee-management", "reports"],
+            "testScenarios": ["payroll-tests", "hr-tests", "broken-links"]
+        },
+        
+        "ClientUpdate": {
+            "role": "30",
+            "username": "ClientUpdate@23477791",
+            "password": "Test0507",
+            "description": "Client Update Access",
+            "permissions": ["client-updates", "basic-reports"],
+            "testScenarios": ["client-update-tests"]
+        },
+        
+        "CPAView": {
+            "role": "35",
+            "username": "CPA@23477791",
+            "password": "Test0507",
+            "description": "CPA View Only Access",
+            "permissions": ["view-only", "reports"],
+            "testScenarios": ["view-only-tests", "reports-tests"]
+        },
+        
+        "ServiceUser": {
+            "role": "100",
+            "username": "ServiceUser@23477791",
+            "password": "Test0507",
+            "description": "Service User - System Integration",
+            "permissions": ["api-access", "system-integration"],
+            "testScenarios": ["api-tests", "integration-tests"]
+        },
+        
+        "ReadOnlyUser": {
+            "role": "67",
+            "username": "ReadOnly@23477791",
+            "password": "Test0507",
+            "description": "Read Only Access",
+            "permissions": ["read-only"],
+            "testScenarios": ["read-only-tests"]
+        }
+    },
+    
+    "testScenarios": {
+        "broken-links": {
+            "description": "Test for broken links across the application",
+            "supportedRoles": ["1", "25", "26", "28"],
+            "testType": "automated",
+            "timeout": 300000
+        },
+        
+        "smoke-test": {
+            "description": "Basic smoke tests for core functionality",
+            "supportedRoles": ["1"],
+            "testType": "automated",
+            "timeout": 180000
+        },
+        
+        "payroll-tests": {
+            "description": "Payroll specific functionality tests",
+            "supportedRoles": ["25", "28"],
+            "testType": "automated",
+            "timeout": 600000
+        },
+        
+        "hr-tests": {
+            "description": "HR specific functionality tests",
+            "supportedRoles": ["26", "28"],
+            "testType": "automated",
+            "timeout": 600000
+        },
+        
+        "api-tests": {
+            "description": "API integration tests",
+            "supportedRoles": ["100"],
+            "testType": "api",
+            "timeout": 120000
+        }
+    },
+    
+    "browserSettings": {
+        "headless": false,
+        "viewport": {
+            "width": 1920,
+            "height": 1080
+        },
+        "timeout": 30000,
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    },
+    
+    "reporting": {
+        "outputDir": "./test-results",
+        "screenshotOnFailure": true,
+        "videoRecording": false,
+        "detailedLogs": true
+    }
+}
