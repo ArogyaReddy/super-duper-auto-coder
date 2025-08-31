@@ -19,7 +19,7 @@ class UltraFreshSmartLogin {
         this.sessionId = null;
     }
 
-    async performUltraFreshLogin(credentials = 'Arogya@23477791/ADPadp01$') {
+    async performUltraFreshLogin(credentialsOrUrl, username = null, password = null) {
         console.log('🚀 ULTRA-FRESH SMART LOGIN');
         console.log('==========================');
         console.log('🎯 Ultimate solution for session conflicts');
@@ -27,6 +27,23 @@ class UltraFreshSmartLogin {
         console.log('🧹 Creates completely isolated browser context');
         console.log('🧠 Handles all security steps intelligently');
         console.log('');
+
+        let finalUsername, finalPassword, targetUrl;
+
+        // Handle different parameter formats
+        if (username && password) {
+            // Called with (baseUrl, username, password) format
+            targetUrl = credentialsOrUrl;
+            finalUsername = username;
+            finalPassword = password;
+            console.log('📋 Using separate parameters format');
+        } else {
+            // Called with legacy "username/password" format
+            const credentials = credentialsOrUrl || 'Arogya@23477791/ADPadp01$';
+            [finalUsername, finalPassword] = credentials.split('/');
+            targetUrl = 'https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c';
+            console.log('📋 Using legacy credentials format');
+        }
 
         try {
             // Step 1: Create ultra-fresh session (includes session killing)
@@ -39,10 +56,7 @@ class UltraFreshSmartLogin {
             console.log('🔐 ULTRA-FRESH LOGIN PROCESS');
             console.log('============================');
 
-            const [username, password] = credentials.split('/');
-            const targetUrl = 'https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c';
-
-            console.log(`👤 Username: ${username}`);
+            console.log(`👤 Username: ${finalUsername}`);
             console.log(`🔗 Target: ${targetUrl}`);
             console.log(`🆔 Session: ${this.sessionId}`);
             console.log('');
@@ -53,7 +67,7 @@ class UltraFreshSmartLogin {
 
             // Username entry
             await this.page.waitForSelector('#login-form_username');
-            await this.fillInput('#login-form_username', username);
+            await this.fillInput('#login-form_username', finalUsername);
             
             // Wait for Next button to be enabled (SDF-aware)
             console.log('⏳ Waiting for Next button to be enabled...');
@@ -67,7 +81,7 @@ class UltraFreshSmartLogin {
 
             // Password entry
             await this.page.waitForSelector('#login-form_password');
-            await this.fillInput('#login-form_password', password);
+            await this.fillInput('#login-form_password', finalPassword);
             
             // Wait for Sign In button to be enabled (SDF-aware)
             console.log('⏳ Waiting for Sign In button to be enabled...');
@@ -102,8 +116,6 @@ class UltraFreshSmartLogin {
                     recommendation: 'Manual logout required from all ADP sessions',
                     actionRequired: 'MANUAL_LOGOUT_ALL_SESSIONS'
                 };
-
-            } else if (currentUrl.includes('step-up') || currentUrl.includes('verification')) {
 
             } else if (currentUrl.includes('step-up') || currentUrl.includes('verification')) {
                 console.log('🛡️  SECURITY STEP DETECTED');

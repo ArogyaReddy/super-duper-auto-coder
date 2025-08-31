@@ -50,9 +50,10 @@ class InteractiveCLI {
             const choices = [
                 '🎯 Generate Test Artifacts',
                 '🚀 Execute Features & Tests', 
-                '� Deploy Artifacts to Main SBS',
-                '�📊 View Reports & Results',
+                '📦 Deploy Artifacts to Main SBS',
+                '📊 View Reports & Results',
                 '⚙️  Framework Management',
+                '🔧 Utilities & Tools',
                 '🎮 Demo & Examples',
                 '📚 Help & Documentation',
                 '❌ Exit'
@@ -65,7 +66,8 @@ class InteractiveCLI {
                 console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
             });
 
-            const answer = await this.getInput('\nEnter your choice (1-8): ');
+            const answer = await this.getInputWithNavigation('\nEnter your choice (1-9): ', 'main');
+            if (answer === null) return; // Navigation command was handled
             const choice = parseInt(answer.trim());
 
             switch (choice) {
@@ -85,12 +87,15 @@ class InteractiveCLI {
                     await this.showFrameworkMenu();
                     break;
                 case 6:
-                    await this.showDemoMenu();
+                    await this.showUtilitiesMenu();
                     break;
                 case 7:
-                    await this.showHelpMenu();
+                    await this.showDemoMenu();
                     break;
                 case 8:
+                    await this.showHelpMenu();
+                    break;
+                case 9:
                     console.log(chalk.cyan('\n👋 Thank you for using Auto-Coder Framework!'));
                     await this.exitCLI();
                     return;
@@ -139,7 +144,8 @@ class InteractiveCLI {
         console.log(chalk.yellow('💡 Option 4 uses Traditional Master Library (stable, 60-75% reuse)!'));
         console.log(chalk.yellow('💡 Option 12 uses Classic NO-AI (lightweight, 30-50% reuse)!'));
         
-        const answer = await this.getInput('\nSelect generation mode (1-14): ');
+        const answer = await this.getInputWithNavigation('\nSelect generation mode (1-14): ', 'submenu');
+        if (answer === null) return; // Navigation command was handled
         const choice = parseInt(answer.trim());
 
         if (choice === 1) {
@@ -308,17 +314,22 @@ class InteractiveCLI {
             '🔄 Run in Parallel (4 threads)',
             '🎭 Run with Custom Parameters',
             '🔁 Re-run Failed Tests',
-            '🔙 Back to Main Menu'
+            '� Run Role-Based Tests',
+            '�🔙 Back to Main Menu'
         ];
 
         choices.forEach((choice, index) => {
             console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
         });
 
-        const answer = await this.getInput('\nSelect execution type (1-8): ');
+        const answer = await this.getInputWithNavigation('\nSelect execution type (1-9): ', 'submenu');
+        if (answer === null) return; // Navigation command was handled
         const choice = parseInt(answer.trim());
 
         if (choice === 8) {
+            await this.showRoleBasedTestingMenu();
+            return;
+        } else if (choice === 9) {
             await this.showMainMenu();
             return;
         }
@@ -350,6 +361,208 @@ class InteractiveCLI {
         } else {
             console.log(chalk.gray('Using previous environment.'));
         }
+    }
+
+    async showRoleBasedTestingMenu() {
+        console.log(chalk.blue.bold('\n👤 ROLE-BASED TESTING'));
+        console.log(chalk.gray('Execute tests using configured user roles and scenarios\n'));
+
+        const choices = [
+            '👤 Single Role Test',
+            '👥 Multi-Role Test', 
+            '📋 List Available Roles',
+            '🎯 View Test Scenarios',
+            '⚙️ Manage User Configuration',
+            '🔙 Back to Execute Menu'
+        ];
+
+        choices.forEach((choice, index) => {
+            console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
+        });
+
+        const answer = await this.getInput('\nSelect option (1-6): ');
+        const choice = parseInt(answer.trim());
+
+        switch (choice) {
+            case 1:
+                await this.handleSingleRoleTest();
+                break;
+            case 2:
+                await this.handleMultiRoleTest();
+                break;
+            case 3:
+                await this.handleListRoles();
+                break;
+            case 4:
+                await this.handleViewScenarios();
+                break;
+            case 5:
+                await this.handleManageConfig();
+                break;
+            case 6:
+                await this.showExecuteMenu();
+                return;
+            default:
+                console.log(chalk.red('\n❌ Invalid choice. Please try again.'));
+                await this.showRoleBasedTestingMenu();
+        }
+    }
+
+    async handleSingleRoleTest() {
+        try {
+            // Load user config manager
+            const UserConfigManager = require('../utils/user-config-manager');
+            const userManager = new UserConfigManager();
+            
+            console.log(chalk.yellow('\n📋 Available Roles:'));
+            const roles = userManager.listAllRoles();
+            roles.forEach((role, index) => {
+                console.log(`${chalk.cyan((index + 1).toString())}. ${role.role} (${role.name})`);
+            });
+            
+            const roleAnswer = await this.getInput('\nSelect role number: ');
+            const roleChoice = parseInt(roleAnswer.trim());
+            
+            if (roleChoice < 1 || roleChoice > roles.length) {
+                console.log(chalk.red('❌ Invalid role selection.'));
+                await this.showRoleBasedTestingMenu();
+                return;
+            }
+            
+            const selectedRole = roles[roleChoice - 1].role;
+            
+            // Show available scenarios
+            console.log(chalk.yellow('\n🎯 Available Scenarios:'));
+            const scenarios = ['broken-links', 'navigation', 'permissions', 'custom'];
+            scenarios.forEach((scenario, index) => {
+                console.log(`${chalk.cyan((index + 1).toString())}. ${scenario}`);
+            });
+            
+            const scenarioAnswer = await this.getInput('\nSelect scenario (1-4): ');
+            const scenarioChoice = parseInt(scenarioAnswer.trim());
+            const selectedScenario = scenarios[scenarioChoice - 1] || 'broken-links';
+            
+            // Set environment for role-based testing
+            const envPrefix = this.selectedEnv ? `ADP_ENV=${this.selectedEnv} ` : '';
+            const command = `${envPrefix}node utils/test-framework.js --role ${selectedRole} --scenario ${selectedScenario}`;
+            
+            await this.executeCommand(command, `Running ${selectedRole} role test with ${selectedScenario} scenario...`);
+            
+        } catch (error) {
+            console.log(chalk.red('❌ Error running single role test:', error.message));
+        }
+        
+        await this.showRoleBasedTestingMenu();
+    }
+
+    async handleMultiRoleTest() {
+        try {
+            const UserConfigManager = require('../utils/user-config-manager');
+            const userManager = new UserConfigManager();
+            
+            console.log(chalk.yellow('\n👥 Multi-Role Testing'));
+            console.log(chalk.gray('Select multiple roles to test simultaneously\n'));
+            
+            const roles = userManager.listAllRoles();
+            roles.forEach((role, index) => {
+                console.log(`${chalk.cyan((index + 1).toString())}. ${role.role} (${role.name})`);
+            });
+            
+            const roleAnswer = await this.getInput('\nEnter role numbers separated by commas (e.g., 1,3,5): ');
+            const roleChoices = roleAnswer.split(',').map(n => parseInt(n.trim()));
+            
+            const selectedRoles = roleChoices
+                .filter(choice => choice >= 1 && choice <= roles.length)
+                .map(choice => roles[choice - 1].role);
+            
+            if (selectedRoles.length === 0) {
+                console.log(chalk.red('❌ No valid roles selected.'));
+                await this.showRoleBasedTestingMenu();
+                return;
+            }
+            
+            const envPrefix = this.selectedEnv ? `ADP_ENV=${this.selectedEnv} ` : '';
+            const command = `${envPrefix}node utils/test-framework.js --multi-role ${selectedRoles.join(',')}`;
+            
+            await this.executeCommand(command, `Running multi-role test for: ${selectedRoles.join(', ')}...`);
+            
+        } catch (error) {
+            console.log(chalk.red('❌ Error running multi-role test:', error.message));
+        }
+        
+        await this.showRoleBasedTestingMenu();
+    }
+
+    async handleListRoles() {
+        try {
+            const envPrefix = this.selectedEnv ? `ADP_ENV=${this.selectedEnv} ` : '';
+            const command = `${envPrefix}node utils/test-framework.js --list-roles`;
+            
+            await this.executeCommand(command, 'Loading available roles...');
+            
+        } catch (error) {
+            console.log(chalk.red('❌ Error listing roles:', error.message));
+        }
+        
+        await this.showRoleBasedTestingMenu();
+    }
+
+    async handleViewScenarios() {
+        try {
+            const envPrefix = this.selectedEnv ? `ADP_ENV=${this.selectedEnv} ` : '';
+            const command = `${envPrefix}node utils/test-framework.js --list-scenarios`;
+            
+            await this.executeCommand(command, 'Loading available test scenarios...');
+            
+        } catch (error) {
+            console.log(chalk.red('❌ Error viewing scenarios:', error.message));
+        }
+        
+        await this.showRoleBasedTestingMenu();
+    }
+
+    async handleManageConfig() {
+        console.log(chalk.yellow('\n⚙️ User Configuration Management'));
+        console.log(chalk.gray('Manage role-based testing configuration\n'));
+        
+        const choices = [
+            '📄 View Current Configuration',
+            '✏️ Edit Configuration File',
+            '✅ Validate Configuration',
+            '🔄 Reload Configuration',
+            '🔙 Back to Role-Based Menu'
+        ];
+        
+        choices.forEach((choice, index) => {
+            console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
+        });
+        
+        const answer = await this.getInput('\nSelect option (1-5): ');
+        const choice = parseInt(answer.trim());
+        
+        switch (choice) {
+            case 1:
+                await this.executeCommand('cat config/test-users-config.json | jq .', 'Viewing configuration...');
+                break;
+            case 2:
+                console.log(chalk.yellow('\n📝 Opening configuration file...'));
+                console.log(chalk.gray('File location: config/test-users-config.json'));
+                console.log(chalk.gray('Use your preferred editor to modify the configuration.'));
+                break;
+            case 3:
+                await this.executeCommand('node utils/test-framework.js --validate-config', 'Validating configuration...');
+                break;
+            case 4:
+                console.log(chalk.green('✅ Configuration will be reloaded on next test run.'));
+                break;
+            case 5:
+                await this.showRoleBasedTestingMenu();
+                return;
+            default:
+                console.log(chalk.red('❌ Invalid choice.'));
+        }
+        
+        await this.handleManageConfig();
     }
 
     async handleExecution(execType) {
@@ -501,7 +714,8 @@ class InteractiveCLI {
             console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
         });
 
-        const answer = await this.getInput('\nSelect report action (1-6): ');
+        const answer = await this.getInputWithNavigation('\nSelect report action (1-6): ', 'submenu');
+        if (answer === null) return; // Navigation command was handled
         const choice = parseInt(answer.trim());
 
         if (choice === 6) {
@@ -584,7 +798,8 @@ class InteractiveCLI {
         console.log(chalk.yellow('   Multi-environment, multi-user-type, multi-application authentication'));
         console.log(chalk.gray('   ✅ QAFIT/IAT/PROD environments ✅ CLIENT/SERVICE_USER types ✅ RUN/MAX/WFN apps'));
 
-        const answer = await this.getInput('\nSelect framework action (1-9): ');
+        const answer = await this.getInputWithNavigation('\nSelect framework action (1-9): ', 'submenu');
+        if (answer === null) return; // Navigation command was handled
         const choice = parseInt(answer.trim());
 
         if (choice === 9) {
@@ -639,6 +854,446 @@ class InteractiveCLI {
 
         await this.executeCommand(command, `Running ${action} validation...`);
         await this.askContinue();
+    }
+
+    async showUtilitiesMenu() {
+        console.log(chalk.blue.bold('\n🔧 ESSENTIAL UTILITIES'));
+        console.log(chalk.gray('Advanced testing utilities we built together\n'));
+
+        const choices = [
+            '🔗 Automated Broken Link Checker for Websites',
+            '🚀 API Endpoint Fuzzer and Validator',
+            '🎯 DOM Change Detector for UI Regression',
+            '⚡ Performance Benchmark Suite for JS Functions',
+            '♿ Automated Accessibility Testing for DOM',
+            '🎲 Dynamic Test Data Generator',
+            '👤 Role-Based Testing & User Management',
+            '🧹 Framework Maintenance & Cleanup',
+            '🔙 Back to Main Menu'
+        ];
+
+        choices.forEach((choice, index) => {
+            console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
+        });
+
+        const answer = await this.getInputWithNavigation('\nSelect utility (1-9): ', 'submenu');
+        if (answer === null) return; // Navigation command was handled
+        const choice = parseInt(answer.trim());
+
+        const envPrefix = this.selectedEnv ? `ADP_ENV=${this.selectedEnv} ` : '';
+
+        switch (choice) {
+            case 1:
+                await this.runBrokenLinkChecker(envPrefix);
+                break;
+            case 2:
+                await this.runAPIFuzzer(envPrefix);
+                break;
+            case 3:
+                await this.runDOMChangeDetector(envPrefix);
+                break;
+            case 4:
+                await this.runPerformanceBenchmark(envPrefix);
+                break;
+            case 5:
+                await this.runAccessibilityChecker(envPrefix);
+                break;
+            case 6:
+                await this.runTestDataGenerator(envPrefix);
+                break;
+            case 7:
+                await this.showRoleBasedUtilities();
+                break;
+            case 8:
+                await this.showFrameworkMaintenance();
+                break;
+            case 9:
+                await this.showMainMenu();
+                return;
+            default:
+                console.log(chalk.red('\n❌ Invalid choice. Please try again.'));
+                await this.showUtilitiesMenu();
+        }
+    }
+
+    async runBrokenLinkChecker(envPrefix) {
+        console.log(chalk.blue.bold('\n🔗 ROLE-BASED BROKEN LINK CHECKER'));
+        console.log(chalk.gray('Login with role-based authentication, then test broken links\n'));
+
+        console.log(chalk.yellow('🔍 Testing Options:'));
+        console.log('1. Test with specific role (use our role-based system)');
+        console.log('2. Test with multiple roles comparison');
+        console.log('3. Test all configured roles');
+        console.log('4. Use existing authenticated session');
+
+        const option = await this.getInputWithNavigation('Select testing approach (1-4): ', 'utility');
+        if (option === null) return; // Navigation command was handled
+
+        switch (option) {
+            case '1':
+                const role = await this.getInputWithNavigation('Enter role name (Owner, PayrollAdmin, HRAdmin, etc.): ', 'utility');
+                if (role === null) return;
+                if (!role) {
+                    console.log(chalk.red('❌ Role name is required'));
+                    await this.showUtilitiesMenu();
+                    return;
+                }
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-broken-links-test.js --role ${role}`,
+                    `Running role-based broken link test for ${role}...`
+                );
+                break;
+
+            case '2':
+                const roles = await this.getInput('Enter roles to compare (comma-separated): ');
+                if (!roles) {
+                    console.log(chalk.red('❌ Roles are required'));
+                    await this.showUtilitiesMenu();
+                    return;
+                }
+                await this.executeCommand(
+                    `${envPrefix}node utils/test-framework.js --compare-roles ${roles} --scenario broken-links`,
+                    `Comparing broken link testing across roles: ${roles}...`
+                );
+                break;
+
+            case '3':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-broken-links-test.js --all-roles`,
+                    'Testing broken links with all configured roles...'
+                );
+                break;
+
+            case '4':
+                await this.executeCommand(
+                    `${envPrefix}node utils/test-real-login-broken-links.js`,
+                    'Running broken link test with ultra-fresh authentication...'
+                );
+                break;
+
+            default:
+                console.log(chalk.red('❌ Invalid option'));
+        }
+
+        await this.showUtilitiesMenu();
+    }
+
+    async runAPIFuzzer(envPrefix) {
+        console.log(chalk.blue.bold('\n� API ENDPOINT FUZZER AND VALIDATOR'));
+        console.log(chalk.gray('Smart API testing with security payloads and validation\n'));
+
+        console.log(chalk.cyan('Choose testing mode:'));
+        console.log('1. Test with specific role authentication');
+        console.log('2. Test multiple roles comparison');
+        console.log('3. Test all configured roles');
+        console.log('4. Test public endpoint (no authentication)');
+        
+        const choice = await this.getInputWithNavigation('Select option (1-4): ', 'utility');
+        if (choice === null) return; // Navigation command was handled
+        
+        switch(choice) {
+            case '1':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-api-fuzzer.js --role`,
+                    'Running role-based API fuzzing...'
+                );
+                break;
+            case '2':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-api-fuzzer.js --compare`,
+                    'Running multi-role API comparison...'
+                );
+                break;
+            case '3':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-api-fuzzer.js --all-roles`,
+                    'Running API fuzzing for all roles...'
+                );
+                break;
+            case '4':
+                const apiUrl = await this.getInput('Enter API endpoint URL: ');
+                if (!apiUrl) {
+                    console.log(chalk.red('❌ API URL is required'));
+                    await this.showUtilitiesMenu();
+                    return;
+                }
+                const method = await this.getInput('HTTP method (GET/POST/PUT/DELETE) [GET]: ') || 'GET';
+                await this.executeCommand(
+                    `${envPrefix}node utils/api-fuzzer.js "${apiUrl}" --method "${method}"`,
+                    'Running public API fuzzing...'
+                );
+                break;
+            default:
+                console.log(chalk.red('❌ Invalid choice'));
+                break;
+        }
+        await this.showUtilitiesMenu();
+    }
+
+    async runDOMChangeDetector(envPrefix) {
+        console.log(chalk.blue.bold('\n🎯 DOM CHANGE DETECTOR FOR UI REGRESSION'));
+        console.log(chalk.gray('Real-time DOM monitoring and visual regression detection\n'));
+
+        console.log(chalk.cyan('Choose monitoring mode:'));
+        console.log('1. Monitor with specific role authentication');
+        console.log('2. Monitor multiple roles comparison');
+        console.log('3. Monitor all configured roles');
+        console.log('4. Monitor public page (no authentication)');
+        
+        const choice = await this.getInput('Select option (1-4): ');
+        
+        switch(choice) {
+            case '1':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-dom-detector.js --role`,
+                    'Running role-based DOM monitoring...'
+                );
+                break;
+            case '2':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-dom-detector.js --compare`,
+                    'Running multi-role DOM comparison...'
+                );
+                break;
+            case '3':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-dom-detector.js --all-roles`,
+                    'Running DOM monitoring for all roles...'
+                );
+                break;
+            case '4':
+                const url = await this.getInput('Enter webpage URL to monitor: ');
+                if (!url) {
+                    console.log(chalk.red('❌ URL is required'));
+                    await this.showUtilitiesMenu();
+                    return;
+                }
+                const duration = await this.getInput('Monitoring duration in seconds [30]: ') || '30';
+                await this.executeCommand(
+                    `${envPrefix}node utils/dom-change-detector.js "${url}" --duration ${duration}`,
+                    'Running public DOM monitoring...'
+                );
+                break;
+            default:
+                console.log(chalk.red('❌ Invalid choice'));
+                break;
+        }
+        await this.showUtilitiesMenu();
+    }
+
+    async runPerformanceBenchmark(envPrefix) {
+        console.log(chalk.blue.bold('\n⚡ PERFORMANCE BENCHMARK SUITE'));
+        console.log(chalk.gray('Microsecond precision timing and memory analysis\n'));
+
+        console.log(chalk.yellow('Benchmark options:'));
+        console.log('1. JavaScript function performance');
+        console.log('2. Website loading performance (role-based)');
+        console.log('3. Website loading performance (public)');
+        console.log('4. Memory usage analysis');
+
+        const option = await this.getInput('Select benchmark type (1-4): ');
+        
+        let command;
+        switch (option) {
+            case '2':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-performance-benchmark.js`,
+                    'Running role-based performance benchmark...'
+                );
+                break;
+            case '3':
+                const url = await this.getInput('Enter website URL: ');
+                command = `${envPrefix}node utils/performance-benchmark.js --url "${url}"`;
+                await this.executeCommand(command, 'Running public performance benchmark...');
+                break;
+            case '4':
+                command = `${envPrefix}node utils/performance-benchmark.js --memory`;
+                await this.executeCommand(command, 'Running memory analysis...');
+                break;
+            default:
+                const jsFile = await this.getInput('Enter JavaScript file path: ');
+                command = `${envPrefix}node utils/performance-benchmark.js --js "${jsFile}"`;
+                await this.executeCommand(command, 'Running JS performance benchmark...');
+        }
+        await this.showUtilitiesMenu();
+    }
+
+    async runAccessibilityChecker(envPrefix) {
+        console.log(chalk.blue.bold('\n♿ AUTOMATED ACCESSIBILITY TESTING'));
+        console.log(chalk.gray('WCAG 2.1 compliance checking and color contrast analysis\n'));
+
+        console.log(chalk.cyan('Choose testing mode:'));
+        console.log('1. Test with specific role authentication');
+        console.log('2. Test multiple roles comparison');
+        console.log('3. Test all configured roles');
+        console.log('4. Test public page (no authentication)');
+        
+        const choice = await this.getInput('Select option (1-4): ');
+        
+        switch(choice) {
+            case '1':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-accessibility-checker.js --role`,
+                    'Running role-based accessibility check...'
+                );
+                break;
+            case '2':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-accessibility-checker.js --compare`,
+                    'Running multi-role accessibility comparison...'
+                );
+                break;
+            case '3':
+                await this.executeCommand(
+                    `${envPrefix}node utils/role-based-accessibility-checker.js --all-roles`,
+                    'Running accessibility check for all roles...'
+                );
+                break;
+            case '4':
+                const url = await this.getInput('Enter webpage URL to check: ');
+                if (!url) {
+                    console.log(chalk.red('❌ URL is required'));
+                    await this.showUtilitiesMenu();
+                    return;
+                }
+
+                console.log(chalk.yellow('Compliance level:'));
+                console.log('1. WCAG 2.1 A');
+                console.log('2. WCAG 2.1 AA (recommended)');
+                console.log('3. WCAG 2.1 AAA');
+
+                const level = await this.getInput('Select compliance level (1-3) [2]: ') || '2';
+                const levels = ['A', 'AA', 'AAA'];
+                
+                await this.executeCommand(
+                    `${envPrefix}node utils/accessibility-checker.js "${url}" --level ${levels[parseInt(level) - 1]}`,
+                    'Running public accessibility check...'
+                );
+                break;
+            default:
+                console.log(chalk.red('❌ Invalid choice'));
+                break;
+        }
+        await this.showUtilitiesMenu();
+    }
+
+    async runTestDataGenerator(envPrefix) {
+        console.log(chalk.blue.bold('\n🎲 DYNAMIC TEST DATA GENERATOR'));
+        console.log(chalk.gray('AI-powered realistic data generation with schema awareness\n'));
+
+        console.log(chalk.yellow('Data generation options:'));
+        console.log('1. User profiles and personal data');
+        console.log('2. Financial data (payroll, transactions)');
+        console.log('3. Custom schema-based data');
+        console.log('4. Edge case and boundary values');
+
+        const option = await this.getInput('Select data type (1-4): ');
+        const count = await this.getInput('Number of records to generate [10]: ') || '10';
+        
+        const dataTypes = ['users', 'financial', 'custom', 'edge-cases'];
+        const dataType = dataTypes[parseInt(option) - 1] || 'users';
+        
+        await this.executeCommand(
+            `${envPrefix}node utils/smart-test-data-generator.js --type ${dataType} --count ${count}`,
+            'Generating test data...'
+        );
+        await this.showUtilitiesMenu();
+    }
+
+    async showFrameworkMaintenance() {
+        console.log(chalk.blue.bold('\n🧹 FRAMEWORK MAINTENANCE'));
+        console.log(chalk.gray('Essential framework maintenance and validation tools\n'));
+
+        const choices = [
+            '📊 Framework Status Check',
+            '✅ Validate Framework Health',
+            '🧹 Cleanup Generated Artifacts',
+            '� Team Readiness Check',
+            '🔍 Debug Framework Issues',
+            '�🔙 Back to Utilities Menu'
+        ];
+
+        choices.forEach((choice, index) => {
+            console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
+        });
+
+        const answer = await this.getInput('\nSelect maintenance option (1-6): ');
+        const choice = parseInt(answer.trim());
+
+        switch (choice) {
+            case 1:
+                await this.executeCommand('npm run framework:status', 'Checking framework status...');
+                break;
+            case 2:
+                await this.executeCommand('npm run validate:framework', 'Validating framework health...');
+                break;
+            case 3:
+                const confirmCleanup = await this.getInput('Cleanup all generated artifacts? (y/N): ');
+                if (confirmCleanup.toLowerCase() === 'y') {
+                    await this.executeCommand('npm run cleanup:all', 'Cleaning up artifacts...');
+                }
+                break;
+            case 4:
+                await this.executeCommand('npm run team:readiness', 'Checking team readiness...');
+                break;
+            case 5:
+                await this.executeCommand('node utils/debug-login-form.js', 'Running framework diagnostics...');
+                break;
+            case 6:
+                await this.showUtilitiesMenu();
+                return;
+            default:
+                console.log(chalk.red('\n❌ Invalid choice. Please try again.'));
+        }
+
+        await this.showFrameworkMaintenance();
+    }
+
+    async showRoleBasedUtilities() {
+        console.log(chalk.blue.bold('\n👤 ROLE-BASED TESTING'));
+        console.log(chalk.gray('User management and role-based testing for generated tests\n'));
+
+        const choices = [
+            '� Role-Based Testing Framework',
+            '👥 Manage User Configuration', 
+            '� List Available Roles',
+            '✅ Validate User Configuration',
+            '� Back to Utilities Menu'
+        ];
+
+        choices.forEach((choice, index) => {
+            console.log(`${chalk.cyan((index + 1).toString())}. ${choice}`);
+        });
+
+        const answer = await this.getInput('\nSelect option (1-5): ');
+        const choice = parseInt(answer.trim());
+
+        const envPrefix = this.selectedEnv ? `ADP_ENV=${this.selectedEnv} ` : '';
+
+        switch (choice) {
+            case 1:
+                await this.showRoleBasedTestingMenu();
+                break;
+            case 2:
+                console.log(chalk.yellow('\n� User Configuration Management'));
+                console.log(chalk.gray('Configuration file: config/test-users-config.json'));
+                console.log(chalk.gray('Edit this file to add/modify user roles and credentials'));
+                await this.getInput('\nPress Enter to continue...');
+                break;
+            case 3:
+                await this.executeCommand(`${envPrefix}node utils/test-framework.js --list-roles`, 'Listing available roles...');
+                break;
+            case 4:
+                await this.executeCommand(`${envPrefix}node utils/test-framework.js --validate-config`, 'Validating configuration...');
+                break;
+            case 5:
+                await this.showUtilitiesMenu();
+                return;
+            default:
+                console.log(chalk.red('\n❌ Invalid choice. Please try again.'));
+        }
+
+        await this.showRoleBasedUtilities();
     }
 
     async showDemoMenu() {
@@ -727,6 +1382,39 @@ class InteractiveCLI {
         console.log(chalk.blue.bold('\n📚 HELP & DOCUMENTATION'));
         console.log(chalk.gray('Get help with Auto-Coder framework\n'));
 
+        console.log(chalk.yellow('Select help topic:'));
+        console.log('1. Framework Overview & Quick Start');
+        console.log('2. Role-Based Testing Configuration');
+        console.log('3. Utilities & Tools Guide');
+        console.log('4. Troubleshooting & Support');
+        console.log('5. Back to Main Menu');
+
+        const helpChoice = await this.getInputWithNavigation('Select help topic (1-5): ', 'submenu');
+        if (helpChoice === null) return;
+
+        switch(helpChoice) {
+            case '1':
+                await this.showFrameworkHelp();
+                break;
+            case '2':
+                await this.showConfigurationHelp();
+                break;
+            case '3':
+                await this.showUtilitiesHelp();
+                break;
+            case '4':
+                await this.showTroubleshootingHelp();
+                break;
+            case '5':
+                await this.showMainMenu();
+                return;
+            default:
+                console.log(chalk.red('❌ Invalid choice'));
+                await this.showHelp();
+        }
+    }
+
+    async showFrameworkHelp() {
         const helpInfo = `
 ${chalk.cyan.bold('🎯 AUTO-CODER FRAMEWORK HELP')}
 
@@ -762,6 +1450,160 @@ ${chalk.yellow('DOCUMENTATION:')}
 
         console.log(helpInfo);
         await this.askContinue();
+        await this.showHelp();
+    }
+
+    async showConfigurationHelp() {
+        const configInfo = `
+${chalk.cyan.bold('🔧 ROLE-BASED TESTING CONFIGURATION')}
+
+${chalk.yellow('SETUP REQUIRED:')}
+Before using role-based utilities (broken link checker, API fuzzer, etc.),
+you must configure your test users.
+
+${chalk.yellow('CONFIGURATION FILE:')}
+📁 Location: ${chalk.green('./config/test-users-config.json')}
+
+${chalk.yellow('QUICK SETUP STEPS:')}
+1. Open the configuration file
+2. Update clientIID with your company ID
+3. Update baseUrl with your environment URL
+4. Configure user roles with real credentials:
+   • Update usernames (format: username@clientIID)
+   • Update passwords with actual test account passwords
+   • Keep role numbers as they match ADP role IDs
+
+${chalk.yellow('VALIDATION COMMANDS:')}
+• ${chalk.green('node utils/validate-user-config.js')} - Check configuration
+• ${chalk.green('node utils/test-role-login.js --role Owner')} - Test specific role
+• ${chalk.green('node utils/test-role-login.js --all')} - Test all roles
+
+${chalk.yellow('EXAMPLE ROLE CONFIGURATION:')}
+{
+  "Owner": {
+    "role": "1",
+    "username": "YourOwner@23477791",
+    "password": "YourPassword",
+    "description": "Company Owner - Full Access"
+  }
+}
+
+${chalk.yellow('AVAILABLE ROLES:')}
+• Owner (1) - Full access
+• PayrollAdmin (25) - Payroll management
+• HRAdmin (26) - HR management  
+• PayrollHRAdmin (28) - Combined access
+• ServiceUser (100) - API access
+• And more...
+
+${chalk.yellow('FOR DETAILED HELP:')}
+📖 See: ${chalk.green('docs/USER-CONFIGURATION-GUIDE.md')}
+        `;
+
+        console.log(configInfo);
+        await this.askContinue();
+        await this.showHelp();
+    }
+
+    async showUtilitiesHelp() {
+        const utilitiesInfo = `
+${chalk.cyan.bold('🔧 UTILITIES & TOOLS GUIDE')}
+
+${chalk.yellow('ROLE-BASED UTILITIES:')}
+All utilities support role-based authentication for comprehensive testing.
+
+${chalk.yellow('AVAILABLE UTILITIES:')}
+
+1. ${chalk.green('🔗 Broken Link Checker')}
+   • Tests for broken links across authenticated pages
+   • Supports single role, multi-role comparison, all roles
+   • Generates detailed reports with fix suggestions
+
+2. ${chalk.green('🌐 API Endpoint Fuzzer')}
+   • Tests API endpoints with role-specific authentication
+   • Security payload testing and validation
+   • Cross-role API access comparison
+
+3. ${chalk.green('🎯 DOM Change Detector')}
+   • Monitors UI changes across user roles
+   • Real-time DOM monitoring and regression detection
+   • Role-specific UI validation
+
+4. ${chalk.green('⚡ Performance Benchmark')}
+   • Website performance testing with authentication
+   • Role-specific performance comparison
+   • Memory usage and timing analysis
+
+5. ${chalk.green('♿ Accessibility Checker')}
+   • WCAG 2.1 compliance testing for authenticated pages
+   • Role-based accessibility comparison
+   • Cross-role accessibility validation
+
+${chalk.yellow('TESTING MODES:')}
+• ${chalk.cyan('Specific Role')} - Test with one role
+• ${chalk.cyan('Multi-Role Comparison')} - Compare across roles
+• ${chalk.cyan('All Roles')} - Test with every configured role
+• ${chalk.cyan('Public Testing')} - No authentication (legacy)
+
+${chalk.yellow('NAVIGATION:')}
+• Type ${chalk.green('back')} to return to utilities menu
+• Type ${chalk.green('main')} to go to main menu
+• Type ${chalk.green('exit')} to quit application
+• Type ${chalk.green('help')} for navigation help
+        `;
+
+        console.log(utilitiesInfo);
+        await this.askContinue();
+        await this.showHelp();
+    }
+
+    async showTroubleshootingHelp() {
+        const troubleshootingInfo = `
+${chalk.cyan.bold('🛠️ TROUBLESHOOTING & SUPPORT')}
+
+${chalk.yellow('COMMON ISSUES:')}
+
+${chalk.green('1. "Role not found" Error')}
+   Solution: Check role name spelling in config file
+   Command: node utils/validate-user-config.js
+
+${chalk.green('2. "Login failed" Error')}
+   Solution: Verify username/password are correct
+   Command: node utils/test-role-login.js --role RoleName
+
+${chalk.green('3. "https:" appearing as username')}
+   Solution: This bug is now fixed, update to latest version
+
+${chalk.green('4. "Configuration not loaded" Error')}
+   Solution: Check config file exists and has valid JSON
+   File: ./config/test-users-config.json
+
+${chalk.green('5. Navigation stuck in menus')}
+   Solution: Use navigation commands (back, main, exit, help)
+
+${chalk.yellow('VALIDATION COMMANDS:')}
+• ${chalk.cyan('node utils/validate-user-config.js')} - Check configuration
+• ${chalk.cyan('node utils/test-role-login.js --all')} - Test all logins
+• ${chalk.cyan('node -e "console.log(JSON.parse(require(\'fs\').readFileSync(\'./config/test-users-config.json\')))"')} - Check JSON syntax
+
+${chalk.yellow('CONFIGURATION CHECKLIST:')}
+✓ Config file exists: ./config/test-users-config.json
+✓ Valid JSON syntax
+✓ clientIID updated with your company ID
+✓ baseUrl updated with your environment
+✓ At least one role configured with real credentials
+✓ Usernames in format: username@clientIID
+✓ Passwords are correct for test environment
+
+${chalk.yellow('GET HELP:')}
+• Documentation: docs/USER-CONFIGURATION-GUIDE.md
+• Framework status: Option 5 in main menu
+• Detailed guides: guides/ directory
+        `;
+
+        console.log(troubleshootingInfo);
+        await this.askContinue();
+        await this.showHelp();
     }
 
     async showFrameworkStatus() {
@@ -1536,6 +2378,63 @@ ${chalk.yellow('DOCUMENTATION:')}
                 resolve(answer);
             });
         });
+    }
+
+    // Enhanced input with navigation options
+    async getInputWithNavigation(question, context = 'menu') {
+        const navigationHelp = chalk.gray('\n(Type "back" to go back, "main" for main menu, "exit" to quit, "help" for navigation help)');
+        const fullQuestion = question + navigationHelp + '\n> ';
+        
+        while (true) {
+            const answer = await this.getInput(fullQuestion);
+            const cleanAnswer = answer.trim().toLowerCase();
+            
+            switch (cleanAnswer) {
+                case 'exit':
+                case 'quit':
+                case 'q':
+                    await this.exitCLI();
+                    return null;
+                    
+                case 'main':
+                case 'home':
+                case 'm':
+                    await this.showMainMenu();
+                    return null;
+                    
+                case 'back':
+                case 'b':
+                    if (context === 'utility') {
+                        await this.showUtilitiesMenu();
+                        return null;
+                    } else if (context === 'submenu') {
+                        await this.showMainMenu();
+                        return null;
+                    } else {
+                        console.log(chalk.yellow('📍 Already at main menu'));
+                        continue;
+                    }
+                    
+                case 'help':
+                case 'h':
+                case '?':
+                    this.showNavigationHelp();
+                    continue;
+                    
+                default:
+                    return answer.trim();
+            }
+        }
+    }
+
+    showNavigationHelp() {
+        console.log(chalk.cyan('\n🧭 NAVIGATION HELP'));
+        console.log(chalk.white('Available commands at any input prompt:'));
+        console.log(chalk.green('  back, b     ') + '- Go back to previous menu');
+        console.log(chalk.green('  main, m     ') + '- Go to main menu');
+        console.log(chalk.green('  exit, quit  ') + '- Exit the application');
+        console.log(chalk.green('  help, ?     ') + '- Show this help');
+        console.log(chalk.gray('\nYou can also just press Enter with no input to stay in current context\n'));
     }
 
     async exitCLI() {

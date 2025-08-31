@@ -180,6 +180,17 @@ class UserConfigManager {
     }
 
     /**
+     * Get all role names
+     * @returns {array} Array of role names
+     */
+    getAllRoleNames() {
+        if (!this.config || !this.config.userRoles) {
+            throw new Error('Configuration not loaded');
+        }
+        return Object.keys(this.config.userRoles);
+    }
+
+    /**
      * Display configuration summary
      */
     displayConfigSummary() {

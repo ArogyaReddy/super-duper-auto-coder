@@ -289,3 +289,118 @@ To achieve this, we will follow a structured approach to implement the universal
 /Users/arog/auto/auto/qa_automation/SBS_Automation/pages/common/practitioner-login.js
 
 
+==========
+
+/Users/arog/auto/auto/qa_automation/auto-coder/utils
+Please use this folder
+
+#QA Automation
+Give me mind blowing, doable QA Automation ideas and executions for every day tasks and tests, preferably using JavaScript. No tool automation needed but only using JavaScript
+
+Please implement the following in : /Users/arog/auto/auto/qa_automation/auto-coder/utils
+
+1. Automated Broken Link Checker for Websites
+2. API Endpoint Fuzzer and Validator
+3. DOM Change Detector for UI Regression
+4. Performance Benchmark Suite for JS Functions
+5. Input Sanitization Fuzzer with Proxies
+6. Automated Data Validation for API Responses
+7. Dynamic Test Data Generator
+8. Automated Accessibility Testing for DOM
+9. Automated Regression Test Suite Runner
+10. Performance Benchmarking for UI Components
+
+================
+
+
+I need an option to go back to main menu or go back to sub menu at any point of time..or exit
+
+Some time, we might not want to do anything and so we might need to go back to main menu or go back to sub menu or exit
+
+
+🔗 AUTOMATED BROKEN LINK CHECKER
+Crawls websites and detects broken links with intelligent analysis
+
+Enter website URL to check: https://online-iat.adp.com/signin/v1/?APPID=RUN&productId=7bf1242e-2ff0-e324-e053-37004b0bc98c
+
+🔍 Options:
+1. Basic scan (fast)
+2. Deep scan with authentication
+3. Enhanced scan with reports
+=============
+
+I just logged into ADP sucessfully.
+I did not see any issues.
+Why are we encoutering such invalid session only from auto-coder?
+I tried from main SBS_Automation framework and it's good and no such issues.
+So, definetly something wrong with our auto-coder framework.
+there is something WRONG with the way we are handling..
+
+Please check main SBS_Automation framework to know, to learn on how the browser is opened, how the session is contained, how the login is implemented.
+Please do the same thing in our auto-coder..
+
+If you cant figure out the issue, feel free to use the same flow using main SBS_Automation itself.
+Uoto you, how you fix it.
+BUt I want to fix this properly and NO MORE such issues from auto-coder please
+
+============
+
+I see you are struggling a lot to implement the simple login...
+
+we dont need to implement the same login in our auto-coder...
+rather, we can use the existing flow/login from main SBS_Automation framework..
+
+Let me get you the feature steps and so we can use/utilize in our auto-coder.
+
+Given Alex is logged into RunMod with a homepage test client
+
+Given('Alex is logged into RunMod with a homepage test client', { timeout: 180 * 1000 }, async function () {
+  await new LoginPage(this.page).navigateTo(this.data.config.url);
+  this.iid = this.data.runmod.homepage.homepage_test_data.homepage_iid;
+  this.attach(`Golden IID: ${this.iid}`);
+  this.cleanup = true;
+  this.userCredentials = await new CredentialsManager(this.data.config).getOwnerDetails(this.iid);
+  await new LoginPage(this.page).performRunLogin(this.userCredentials.ADP_USER_ID, this.userCredentials.Password);
+});
+
+Please use the above as it is...and so we dont need to worry about the login code in our auto-coder.
+
+I replaced the test data in main SBS_Automation with the new data that we have..
+
+Please proceed with it and do your best now
+
+
+========
+
+Actually, we dont need any utility wrapper that uses this working SBS-style approach..
+As I said, we can just re-use the code from main SBS_Automation...
+We just need to find a way...how we can use that main SBS_Automation...because main SBS_Automation has JavaScript, Cucumber, Playwright code...
+So, to use same flow....do we just a featutre file two scenarios for login - one fore client, another for service user...
+OR is there any other way....like directly calling the login methods from main SBS_Automation into our auto-coder...
+
+
+=========
+
+Did we implement the main SBS_Automation login flow into our interactive CLI flows?
+I ask this, because, when we logged,right away, I saw session timeout, use different tab..
+It tells me, we might be using still our code and not from main SBS_Automation
+Can you please check and fix this please..
+Review and tell me first, if we have this issue and not using as it is from main SBS_Automation for the login [CLIENT and Service user]
+
+
+==============
+
+❌ PROBLEMS WITH OUR CURRENT IMPLEMENTATION:
+❌ Wrong Browser Setup - We're creating our own browser instance instead of using SBS_Automation's sophisticated browser setup with proper args, proxy settings, and session management
+
+❌ Wrong Navigation - We're using simple page.goto() instead of SBS_Automation's retryGoto with proper timeout and retry logic
+
+❌ Missing SBS_Automation Context - We're not using the SBS_Automation framework context (data.config, userCredentials, etc.)
+
+❌ Missing Session Management - SBS_Automation has sophisticated session management, proxy settings, and browser args that we're missing
+
+❌ Wrong Page Integration - We should use SBS_Automation's existing page instance, not create our own
+
+Let me create a PROPER integration that uses SBS_Automation exactly as-is:
+
+=========
